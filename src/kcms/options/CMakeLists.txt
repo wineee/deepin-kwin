@@ -27,11 +27,11 @@ kcmutils_generate_module_data(
 kconfig_add_kcfg_files(kcm_kwinoptions_PART_SRCS kwinoptions_settings.kcfgc GENERATE_MOC)
 kconfig_add_kcfg_files(kcm_kwinoptions_PART_SRCS kwinoptions_kdeglobals_settings.kcfgc GENERATE_MOC)
 
-if (QT_MAJOR_VERSION EQUAL "5")
+if (QT_VERSION_MAJOR EQUAL "5")
     qt5_add_dbus_interface(kcm_kwinoptions_PART_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
 else()
     qt_add_dbus_interface(kcm_kwinoptions_PART_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
 endif()
 
 kcoreaddons_add_plugin(kcm_kwinoptions SOURCES ${kcm_kwinoptions_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
-target_link_libraries(kcm_kwinoptions kwin Qt${QT_MAJOR_VERSION}::DBus KF5::KCMUtils KF5::I18n KF5::ConfigWidgets KF5::Service KF5::WindowSystem)
+target_link_libraries(kcm_kwinoptions kwin Qt${QT_VERSION_MAJOR}::DBus KF6::KCMUtils KF6::I18n KF6::ConfigWidgets KF6::Service KF6::WindowSystem)

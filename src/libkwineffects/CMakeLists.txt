@@ -38,17 +38,17 @@ add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
 generate_export_header(kwineffects EXPORT_FILE_NAME kwineffects_export.h)
 target_link_libraries(kwineffects
     PUBLIC
-        KF5::ConfigCore
-        KF5::CoreAddons
-        KF5::WindowSystem
+        KF6::ConfigCore
+        KF6::CoreAddons
+        KF6::WindowSystem
         XCB::XCB
     PRIVATE
-        Qt${QT_MAJOR_VERSION}::Quick
-        KF5::I18n
+        Qt${QT_VERSION_MAJOR}::Quick
+        KF6::I18n
         kwinglutils
 )
-if (QT_MAJOR_VERSION EQUAL "6")
-    target_link_libraries(kwineffects PRIVATE Qt${QT_MAJOR_VERSION}::GuiPrivate)
+if (QT_VERSION_MAJOR EQUAL "6")
+    target_link_libraries(kwineffects PRIVATE Qt${QT_VERSION_MAJOR}::GuiPrivate)
 endif()
 if (KWIN_HAVE_XRENDER_COMPOSITING)
     target_link_libraries(kwineffects PRIVATE XCB::XFIXES)
@@ -72,7 +72,7 @@ set(kwin_GLUTILSLIB_SRCS
 
 add_library(kwinglutils SHARED ${kwin_GLUTILSLIB_SRCS})
 generate_export_header(kwinglutils BASE_NAME kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
-target_link_libraries(kwinglutils PUBLIC XCB::XCB KF5::CoreAddons KF5::ConfigCore KF5::WindowSystem epoxy::epoxy)
+target_link_libraries(kwinglutils PUBLIC XCB::XCB KF6::CoreAddons KF6::ConfigCore KF6::WindowSystem epoxy::epoxy)
 set_target_properties(kwinglutils PROPERTIES
     VERSION ${KWINEFFECTS_VERSION}
     SOVERSION ${KWINEFFECTS_SOVERSION}

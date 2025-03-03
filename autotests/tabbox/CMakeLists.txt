@@ -17,22 +17,22 @@ set(testTabBoxClientModel_SRCS
 add_executable(testTabBoxClientModel ${testTabBoxClientModel_SRCS})
 set_target_properties(testTabBoxClientModel PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 target_link_libraries(testTabBoxClientModel
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::DBus
-    Qt${QT_MAJOR_VERSION}::Quick
-    Qt${QT_MAJOR_VERSION}::Test
-    Qt${QT_MAJOR_VERSION}::Widgets
-    Qt${QT_MAJOR_VERSION}::GuiPrivate
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::DBus
+    Qt${QT_VERSION_MAJOR}::Quick
+    Qt${QT_VERSION_MAJOR}::Test
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::GuiPrivate
 
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::Package
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::I18n
+    KF6::Package
+    KF6::WindowSystem
 
     XCB::XCB
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testTabBoxClientModel Qt${QT_MAJOR_VERSION}::X11Extras)
+if (QT_VERSION_MAJOR EQUAL "5")
+    target_link_libraries(testTabBoxClientModel Qt${QT_VERSION_MAJOR}::X11Extras)
 endif()
 add_test(NAME kwin-testTabBoxClientModel COMMAND testTabBoxClientModel)
 ecm_mark_as_test(testTabBoxClientModel)
@@ -54,22 +54,22 @@ set(testTabBoxHandler_SRCS
 add_executable(testTabBoxHandler ${testTabBoxHandler_SRCS})
 set_target_properties(testTabBoxHandler PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 target_link_libraries(testTabBoxHandler
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::DBus
-    Qt${QT_MAJOR_VERSION}::Quick
-    Qt${QT_MAJOR_VERSION}::Test
-    Qt${QT_MAJOR_VERSION}::Widgets
-    Qt${QT_MAJOR_VERSION}::GuiPrivate
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::DBus
+    Qt${QT_VERSION_MAJOR}::Quick
+    Qt${QT_VERSION_MAJOR}::Test
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::GuiPrivate
 
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::Package
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::I18n
+    KF6::Package
+    KF6::WindowSystem
 
     XCB::XCB
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testTabBoxHandler Qt${QT_MAJOR_VERSION}::X11Extras)
+if (QT_VERSION_MAJOR EQUAL "5")
+    target_link_libraries(testTabBoxHandler Qt${QT_VERSION_MAJOR}::X11Extras)
 endif()
 add_test(NAME kwin-testTabBoxHandler COMMAND testTabBoxHandler)
 ecm_mark_as_test(testTabBoxHandler)
@@ -84,7 +84,7 @@ set(testTabBoxConfig_SRCS
 )
 
 add_executable(testTabBoxConfig ${testTabBoxConfig_SRCS})
-target_link_libraries(testTabBoxConfig Qt${QT_MAJOR_VERSION}::Core Qt${QT_MAJOR_VERSION}::Test)
+target_link_libraries(testTabBoxConfig Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Test)
 add_test(NAME kwin-testTabBoxConfig COMMAND testTabBoxConfig)
 ecm_mark_as_test(testTabBoxConfig)
 
@@ -99,6 +99,6 @@ set(testDesktopChain_SRCS
 )
 
 add_executable(testDesktopChain ${testDesktopChain_SRCS})
-target_link_libraries(testDesktopChain Qt${QT_MAJOR_VERSION}::Core Qt${QT_MAJOR_VERSION}::Test)
+target_link_libraries(testDesktopChain Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Test)
 add_test(NAME kwin-testDesktopChain COMMAND testDesktopChain)
 ecm_mark_as_test(testDesktopChain)

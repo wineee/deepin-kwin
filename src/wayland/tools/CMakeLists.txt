@@ -4,8 +4,8 @@ if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
     cmake_minimum_required(VERSION 3.13)
     project(qtwaylandscanner_kde CXX)
     set(CMAKE_CXX_STANDARD 20)
-    find_package(Qt5 5.11.3 CONFIG REQUIRED Core)
-    find_package(ECM ${KF5_CURRENT_VERSION} NO_MODULE REQUIRED)
+    find_package(Qt CONFIG REQUIRED Core)
+    find_package(ECM ${KF6_CURRENT_VERSION} NO_MODULE REQUIRED)
     set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 endif()
 
@@ -14,15 +14,15 @@ if(CMAKE_CROSSCOMPILING AND QTWAYLANDSCANNER_KDE_EXECUTABLE)
     add_executable(qtwaylandscanner_kde IMPORTED GLOBAL)
     set_target_properties(qtwaylandscanner_kde PROPERTIES IMPORTED_LOCATION ${QTWAYLANDSCANNER_KDE_EXECUTABLE})
 elseif(CMAKE_CROSSCOMPILING)
-    if (NOT KF5_HOST_TOOLING)
-        message(FATAL_ERROR "Please provide a prefix with a native Qt build and pass -DKF5_HOST_TOOLING=path")
+    if (NOT KF6_HOST_TOOLING)
+        message(FATAL_ERROR "Please provide a prefix with a native Qt build and pass -DKF6_HOST_TOOLING=path")
     endif()
 
     # search native tooling prefix
     set(NATIVE_PREFIX "" CACHE STRING "CMAKE_PREFIX_PATH for native Qt libraries")
     if (NOT NATIVE_PREFIX)
-        string(FIND ${KF5_HOST_TOOLING} /lib idx)
-        string(SUBSTRING ${KF5_HOST_TOOLING} 0 ${idx} NATIVE_PREFIX)
+        string(FIND ${KF6_HOST_TOOLING} /lib idx)
+        string(SUBSTRING ${KF6_HOST_TOOLING} 0 ${idx} NATIVE_PREFIX)
     endif()
     message(STATUS "Building qtwaylandscanner_kde against ${NATIVE_PREFIX}")
 
@@ -31,7 +31,7 @@ elseif(CMAKE_CROSSCOMPILING)
             SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
             CMAKE_ARGS -DECM_DIR=${ECM_DIR} -DCMAKE_PREFIX_PATH=${NATIVE_PREFIX}
             -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}
-            -DQT_MAJOR_VERSION=${QT_MAJOR_VERSION}
+            -DQT_VERSION_MAJOR=${QT_VERSION_MAJOR}
             INSTALL_COMMAND ""
             BUILD_BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/native_qtwaylandscanner_kde-prefix/src/native_qtwaylandscanner_kde-build/qtwaylandscanner_kde
             )
@@ -43,7 +43,7 @@ else()
     # host build
     remove_definitions(-DQT_NO_CAST_FROM_ASCII)
     add_executable(qtwaylandscanner_kde qtwaylandscanner.cpp)
-    target_link_libraries(qtwaylandscanner_kde Qt${QT_MAJOR_VERSION}::Core)
+    target_link_libraries(qtwaylandscanner_kde Qt${QT_VERSION_MAJOR}::Core)
     include(ECMMarkNonGuiExecutable)
     ecm_mark_nongui_executable(qtwaylandscanner_kde)
 endif()

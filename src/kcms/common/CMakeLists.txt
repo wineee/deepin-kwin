@@ -7,7 +7,7 @@ set(kcmkwincommon_SRC
     effectsmodel.cpp
 )
 
-if (QT_MAJOR_VERSION EQUAL "5")
+if (QT_VERSION_MAJOR EQUAL "5")
 qt5_add_dbus_interface(kcmkwincommon_SRC
     ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface
 )
@@ -26,13 +26,13 @@ endif()
 add_library(kcmkwincommon SHARED ${kcmkwincommon_SRC})
 
 target_link_libraries(kcmkwincommon
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::DBus
-    KF5::CoreAddons
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::Package
-    KF5::KCMUtils
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::DBus
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::I18n
+    KF6::Package
+    KF6::KCMUtils
 )
 
 set_target_properties(kcmkwincommon PROPERTIES

@@ -1,4 +1,4 @@
-if (QT_MAJOR_VERSION EQUAL "5")
+if (QT_VERSION_MAJOR EQUAL "5")
     qt5_generate_dbus_interface(device.h org.kde.kwin.InputDevice.xml OPTIONS -A)
 else()
     qt_generate_dbus_interface(device.h org.kde.kwin.InputDevice.xml OPTIONS -A)

@@ -1,7 +1,7 @@
 add_subdirectory(helper)
 
 add_library(KWinIntegrationTestFramework SHARED)
-if (QT_MAJOR_VERSION EQUAL "5")
+if (QT_VERSION_MAJOR EQUAL "5")
     ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
         PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
         BASENAME input-method-unstable-v1
@@ -66,8 +66,8 @@ target_sources(KWinIntegrationTestFramework PRIVATE
 )
 target_link_libraries(KWinIntegrationTestFramework
     PUBLIC
-        Qt${QT_MAJOR_VERSION}::Test
-        KF5::WaylandClient
+        Qt${QT_VERSION_MAJOR}::Test
+        KF6::WaylandClient
         Wayland::Client
         kwin
 
@@ -77,11 +77,11 @@ target_link_libraries(KWinIntegrationTestFramework
 
         # Static plugins
         KWinQpaPlugin
-        KF5GlobalAccelKWinPlugin
-        KF5WindowSystemKWinPlugin
-        KF5IdleTimeKWinPlugin
+        KF6GlobalAccelKWinPlugin
+        KF6WindowSystemKWinPlugin
+        KF6IdleTimeKWinPlugin
 )
-kcoreaddons_target_static_plugins(KWinIntegrationTestFramework "kwin/effects/plugins" LINK_OPTION "PRIVATE")
+kcoreaddons_target_static_plugins(KWinIntegrationTestFramework NAMESPACE "kwin/effects/plugins" LINK_OPTION "PRIVATE")
 set_target_properties(KWinIntegrationTestFramework PROPERTIES CXX_VISIBILITY_PRESET default)
 
 function(integrationTest)
@@ -90,12 +90,12 @@ function(integrationTest)
     set(multiValueArgs SRCS LIBS)
     cmake_parse_arguments(ARGS "${optionArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_executable(${ARGS_NAME} ${ARGS_SRCS})
-    target_link_libraries(${ARGS_NAME} KWinIntegrationTestFramework Qt${QT_MAJOR_VERSION}::Test ${ARGS_LIBS})
+    target_link_libraries(${ARGS_NAME} KWinIntegrationTestFramework Qt${QT_VERSION_MAJOR}::Test ${ARGS_LIBS})
     add_test(NAME kwin-${ARGS_NAME} COMMAND dbus-run-session ${CMAKE_BINARY_DIR}/bin/${ARGS_NAME})
     if (${ARGS_WAYLAND_ONLY})
         add_executable(${ARGS_NAME}_waylandonly ${ARGS_SRCS} )
         set_target_properties(${ARGS_NAME}_waylandonly PROPERTIES COMPILE_DEFINITIONS "NO_XWAYLAND")
-        target_link_libraries(${ARGS_NAME}_waylandonly KWinIntegrationTestFramework Qt${QT_MAJOR_VERSION}::Test ${ARGS_LIBS})
+        target_link_libraries(${ARGS_NAME}_waylandonly KWinIntegrationTestFramework Qt${QT_VERSION_MAJOR}::Test ${ARGS_LIBS})
         add_test(NAME kwin-${ARGS_NAME}-waylandonly COMMAND dbus-run-session ${CMAKE_BINARY_DIR}/bin/${ARGS_NAME}_waylandonly)
     endif()
 endfunction()
@@ -149,7 +149,7 @@ integrationTest(WAYLAND_ONLY NAME testOutputChanges SRCS outputchanges_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testTiles SRCS tiles_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testFractionalScaling SRCS fractional_scaling_test.cpp)
 
-if (QT_MAJOR_VERSION EQUAL "5")
+if (QT_VERSION_MAJOR EQUAL "5")
     qt5_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
 else()
     qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)

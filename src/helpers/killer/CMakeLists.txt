@@ -5,15 +5,15 @@ set(kwin_killer_helper_SRCS killer.cpp)
 add_executable(kwin_killer_helper ${kwin_killer_helper_SRCS})
 
 target_link_libraries(kwin_killer_helper
-    KF5::AuthCore
-    KF5::I18n
-    KF5::WidgetsAddons
-    Qt${QT_MAJOR_VERSION}::Widgets
+    KF6::AuthCore
+    KF6::I18n
+    KF6::WidgetsAddons
+    Qt${QT_VERSION_MAJOR}::Widgets
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(kwin_killer_helper Qt${QT_MAJOR_VERSION}::X11Extras)
+if (QT_VERSION_MAJOR EQUAL "5")
+    target_link_libraries(kwin_killer_helper Qt${QT_VERSION_MAJOR}::X11Extras)
 else()
-    target_link_libraries(kwin_killer_helper Qt${QT_MAJOR_VERSION}::GuiPrivate)
+    target_link_libraries(kwin_killer_helper Qt${QT_VERSION_MAJOR}::GuiPrivate)
 endif()
 
 install(TARGETS kwin_killer_helper DESTINATION ${KDE_INSTALL_LIBEXECDIR})

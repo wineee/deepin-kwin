@@ -19,11 +19,11 @@ kwin4_add_effect_module(kwin4_effect_overview ${overview_SOURCES})
 target_link_libraries(kwin4_effect_overview PRIVATE
     kwineffects
 
-    KF5::ConfigGui
-    KF5::GlobalAccel
-    KF5::I18n
+    KF6::ConfigGui
+    KF6::GlobalAccel
+    KF6::I18n
 
-    Qt${QT_MAJOR_VERSION}::Quick
+    Qt${QT_VERSION_MAJOR}::Quick
 )
 
 install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/overview)

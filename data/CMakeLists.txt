@@ -3,9 +3,9 @@ add_subdirectory(icons)
 ########### next target ###############
 add_executable(kwin5_update_default_rules update_default_rules.cpp)
 target_link_libraries(kwin5_update_default_rules
-    KF5::ConfigCore
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::DBus
+    KF6::ConfigCore
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::DBus
 )
 install(TARGETS kwin5_update_default_rules DESTINATION ${KDE_INSTALL_LIBDIR}/kconf_update_bin/)
 

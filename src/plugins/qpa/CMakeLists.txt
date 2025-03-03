@@ -22,13 +22,13 @@ ecm_qt_declare_logging_category(KWinQpaPlugin
 target_compile_definitions(KWinQpaPlugin PRIVATE QT_STATICPLUGIN)
 
 target_link_libraries(KWinQpaPlugin
-    Qt${QT_MAJOR_VERSION}::CorePrivate
-    Qt${QT_MAJOR_VERSION}::GuiPrivate
+    Qt${QT_VERSION_MAJOR}::CorePrivate
+    Qt${QT_VERSION_MAJOR}::GuiPrivate
     Freetype::Freetype # Must be after Qt5 platform support libs
     Fontconfig::Fontconfig
     kwin
 )
-if (QT_MAJOR_VERSION EQUAL "5")
+if (QT_VERSION_MAJOR EQUAL "5")
     target_link_libraries(KWinQpaPlugin
         Qt5FontDatabaseSupport::Qt5FontDatabaseSupport
         Qt5ThemeSupport::Qt5ThemeSupport

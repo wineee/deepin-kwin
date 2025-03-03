@@ -9,7 +9,7 @@ set(screenshot_SOURCES
     screenshotdbusinterface2.cpp
 )
 
-if (QT_MAJOR_VERSION EQUAL "5")
+if (QT_VERSION_MAJOR EQUAL "5")
     qt5_add_dbus_adaptor(screenshot_SOURCES org.kde.KWin.ScreenShot2.xml screenshotdbusinterface2.h KWin::ScreenShotDBusInterface2)
 else()
     qt_add_dbus_adaptor(screenshot_SOURCES org.kde.KWin.ScreenShot2.xml screenshotdbusinterface2.h KWin::ScreenShotDBusInterface2)
@@ -20,16 +20,18 @@ target_link_libraries(kwin4_effect_screenshot PRIVATE
     kwineffects
     kwinglutils
 
-    KF5::Service
-    KF5::I18n
+    KF6::Service
+    KF6::I18n
 
-    Qt${QT_MAJOR_VERSION}::Concurrent
-    Qt${QT_MAJOR_VERSION}::DBus
-    Qt${QT_MAJOR_VERSION}::X11Extras
+    Qt${QT_VERSION_MAJOR}::Concurrent
+    Qt${QT_VERSION_MAJOR}::DBus
+    Qt${QT_VERSION_MAJOR}::QuickWidgets
+    Qt${QT_VERSION_MAJOR}::GuiPrivate
+    #Qt${QT_VERSION_MAJOR}::X11Extras
 )
 
 if (KWIN_BUILD_NOTIFICATIONS)
-    target_link_libraries(kwin4_effect_screenshot PRIVATE KF5::Notifications)
+    target_link_libraries(kwin4_effect_screenshot PRIVATE KF6::Notifications)
 endif()
 
 ecm_qt_declare_logging_category(kwin4_effect_screenshot

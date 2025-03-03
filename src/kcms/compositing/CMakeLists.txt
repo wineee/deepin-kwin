@@ -11,7 +11,7 @@ set(kwincompositing_SRC
 
 kconfig_add_kcfg_files(kwincompositing_SRC kwincompositing_setting.kcfgc GENERATE_MOC)
 
-if (QT_MAJOR_VERSION EQUAL "5")
+if (QT_VERSION_MAJOR EQUAL "5")
 qt5_add_dbus_interface(kwincompositing_SRC
     ${KWin_SOURCE_DIR}/src/org.kde.kwin.Compositing.xml kwin_compositing_interface
 )
@@ -26,12 +26,13 @@ ki18n_wrap_ui(kwincompositing_SRC compositing.ui)
 kcoreaddons_add_plugin(kwincompositing SOURCES ${kwincompositing_SRC} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
 
 target_link_libraries(kwincompositing
-    Qt${QT_MAJOR_VERSION}::DBus
-    Qt${QT_MAJOR_VERSION}::Widgets
+    Qt${QT_VERSION_MAJOR}::DBus
+    Qt${QT_VERSION_MAJOR}::Widgets
 
-    KF5::ConfigCore
-    KF5::CoreAddons
-    KF5::I18n
-    KF5::KCMUtils
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::CoreAddons
+    KF6::I18n
+    KF6::KCMUtils
+    KF6::WindowSystem
+    KF6::Service
 )

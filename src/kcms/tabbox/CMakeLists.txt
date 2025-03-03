@@ -15,7 +15,7 @@ set(kcm_kwintabbox_PART_SRCS
 )
 
 ki18n_wrap_ui(kcm_kwintabbox_PART_SRCS main.ui)
-if (QT_MAJOR_VERSION EQUAL "5")
+if (QT_VERSION_MAJOR EQUAL "5")
     qt5_add_dbus_interface(kcm_kwintabbox_PART_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
 else()
     qt_add_dbus_interface(kcm_kwintabbox_PART_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
@@ -25,14 +25,14 @@ kconfig_add_kcfg_files(kcm_kwintabbox_PART_SRCS kwintabboxsettings.kcfgc kwinswi
 kcoreaddons_add_plugin(kcm_kwintabbox SOURCES ${kcm_kwintabbox_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
 
 target_link_libraries(kcm_kwintabbox
-    Qt${QT_MAJOR_VERSION}::Quick
+    Qt${QT_VERSION_MAJOR}::Quick
 
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::KCMUtils
-    KF5::NewStuffWidgets
-    KF5::Package
-    KF5::Service
+    KF6::GlobalAccel
+    KF6::I18n
+    KF6::KCMUtils
+    KF6::NewStuffWidgets
+    KF6::Package
+    KF6::Service
 
     XCB::XCB
 )

@@ -36,12 +36,12 @@ include_directories(${Libdrm_INCLUDE_DIRS})
 
 add_library(LibDrmTest STATIC ${mockDRM_SRCS})
 target_link_libraries(LibDrmTest
-    Qt${QT_MAJOR_VERSION}::Gui
-    Qt${QT_MAJOR_VERSION}::Widgets
-    KF5::ConfigCore
-    KF5::WindowSystem
-    KF5::CoreAddons
-    KF5::I18n
+    Qt${QT_VERSION_MAJOR}::Gui
+    Qt${QT_VERSION_MAJOR}::Widgets
+    KF6::ConfigCore
+    KF6::WindowSystem
+    KF6::CoreAddons
+    KF6::I18n
     XCB::XCB
     PkgConfig::Libxcvt
     gbm::gbm
@@ -59,6 +59,6 @@ target_include_directories(LibDrmTest
 # Tests
 ########################################################
 add_executable(testDrm drmTest.cpp)
-target_link_libraries(testDrm LibDrmTest Qt${QT_MAJOR_VERSION}::Test)
+target_link_libraries(testDrm LibDrmTest Qt${QT_VERSION_MAJOR}::Test)
 add_test(NAME kwin-testDrm COMMAND testDrm)
 ecm_mark_as_test(testDrm)
