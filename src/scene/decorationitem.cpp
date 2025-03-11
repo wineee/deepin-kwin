@@ -16,8 +16,8 @@
 
 #include <cmath>
 
-#include <KDecoration3/DecoratedWindow>
-#include <KDecoration3/Decoration>
+#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/Decoration>
 
 #include <QPainter>
 
@@ -28,12 +28,12 @@ DecorationRenderer::DecorationRenderer(Decoration::DecoratedWindowImpl *client)
     : m_client(client)
     , m_imageSizesDirty(true)
 {
-    connect(client->decoration(), &KDecoration3::Decoration::damaged,
+    connect(client->decoration(), &KDecoration2::Decoration::damaged,
             this, &DecorationRenderer::addDamage);
 
-    connect(client->decoration(), &KDecoration3::Decoration::bordersChanged,
+    connect(client->decoration(), &KDecoration2::Decoration::bordersChanged,
             this, &DecorationRenderer::invalidate);
-    connect(client->decoratedWindow(), &KDecoration3::DecoratedWindow::sizeChanged,
+    connect(client->decoratedWindow(), &KDecoration2::DecoratedWindow::sizeChanged,
             this, &DecorationRenderer::invalidate);
 
     invalidate();
@@ -124,7 +124,7 @@ void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)
     client()->decoration()->paint(painter, rect);
 }
 
-DecorationItem::DecorationItem(KDecoration3::Decoration *decoration, Window *window, Scene *scene, Item *parent)
+DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *window, Scene *scene, Item *parent)
     : Item(scene, parent)
     , m_window(window)
 {
@@ -137,7 +137,7 @@ DecorationItem::DecorationItem(KDecoration3::Decoration *decoration, Window *win
     connect(window, &Window::screenChanged,
             this, &DecorationItem::handleOutputChanged);
 
-    connect(decoration, &KDecoration3::Decoration::bordersChanged,
+    connect(decoration, &KDecoration2::Decoration::bordersChanged,
             this, &DecorationItem::discardQuads);
 
     connect(renderer(), &DecorationRenderer::damaged,

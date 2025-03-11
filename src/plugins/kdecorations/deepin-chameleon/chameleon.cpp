@@ -26,9 +26,9 @@
 #include "chameleonwindowtheme.h"
 #include "kwinutils.h"
 
-#include <KDecoration3/DecoratedWindow>
-#include <KDecoration3/DecorationButtonGroup>
-#include <KDecoration3/DecorationSettings>
+#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/DecorationButtonGroup>
+#include <KDecoration2/DecorationSettings>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <KConfigCore/KConfig>
@@ -59,7 +59,7 @@
 Q_DECLARE_METATYPE(QPainterPath)
 
 Chameleon::Chameleon(QObject *parent, const QVariantList &args)
-    : KDecoration3::Decoration(parent, args)
+    : KDecoration2::Decoration(parent, args)
     , m_client(parent)
 {
 }
@@ -129,20 +129,20 @@ bool Chameleon::init()
 
     connect(global_config, &ChameleonConfig::themeChanged, this, &Chameleon::updateTheme);
     connect(global_config, &ChameleonConfig::windowNoTitlebarPropertyChanged, this, &Chameleon::onNoTitlebarPropertyChanged);
-    connect(settings().get(), &KDecoration3::DecorationSettings::alphaChannelSupportedChanged, this, &Chameleon::updateConfig);
-    connect(c, &KDecoration3::DecoratedWindow::activeChanged, this, &Chameleon::updateConfig);
-    connect(c, &KDecoration3::DecoratedWindow::widthChanged, this, &Chameleon::onClientWidthChanged);
-    connect(c, &KDecoration3::DecoratedWindow::heightChanged, this, &Chameleon::onClientHeightChanged);
+    connect(settings().get(), &KDecoration2::DecorationSettings::alphaChannelSupportedChanged, this, &Chameleon::updateConfig);
+    connect(c, &KDecoration2::DecoratedWindow::activeChanged, this, &Chameleon::updateConfig);
+    connect(c, &KDecoration2::DecoratedWindow::widthChanged, this, &Chameleon::onClientWidthChanged);
+    connect(c, &KDecoration2::DecoratedWindow::heightChanged, this, &Chameleon::onClientHeightChanged);
     if (QX11Info::isPlatformX11()) {
-        connect(c, &KDecoration3::DecoratedWindow::maximizedChanged, this, &Chameleon::updateTitleBarArea);
+        connect(c, &KDecoration2::DecoratedWindow::maximizedChanged, this, &Chameleon::updateTitleBarArea);
     } else {
-        connect(c, &KDecoration3::DecoratedWindow::maximizedChanged, this, &Chameleon::updateTitleBarArea, Qt::QueuedConnection);
+        connect(c, &KDecoration2::DecoratedWindow::maximizedChanged, this, &Chameleon::updateTitleBarArea, Qt::QueuedConnection);
     }
-    connect(c, &KDecoration3::DecoratedWindow::adjacentScreenEdgesChanged, this, &Chameleon::updateBorderPath);
-    connect(c, &KDecoration3::DecoratedWindow::maximizedHorizontallyChanged, this, &Chameleon::updateBorderPath);
-    connect(c, &KDecoration3::DecoratedWindow::maximizedVerticallyChanged, this, &Chameleon::updateBorderPath);
-    connect(c, &KDecoration3::DecoratedWindow::captionChanged, this, &Chameleon::updateTitleGeometry);
-    connect(c, &KDecoration3::DecoratedWindow::maximizeableChanged, this, &Chameleon::updateTitleBarArea);
+    connect(c, &KDecoration2::DecoratedWindow::adjacentScreenEdgesChanged, this, &Chameleon::updateBorderPath);
+    connect(c, &KDecoration2::DecoratedWindow::maximizedHorizontallyChanged, this, &Chameleon::updateBorderPath);
+    connect(c, &KDecoration2::DecoratedWindow::maximizedVerticallyChanged, this, &Chameleon::updateBorderPath);
+    connect(c, &KDecoration2::DecoratedWindow::captionChanged, this, &Chameleon::updateTitleGeometry);
+    connect(c, &KDecoration2::DecoratedWindow::maximizeableChanged, this, &Chameleon::updateTitleBarArea);
     connect(this, &Chameleon::noTitleBarChanged, this, &Chameleon::updateTitleBarArea, Qt::QueuedConnection);
     connect(m_theme, &ChameleonWindowTheme::themeChanged, this, &Chameleon::updateTheme);
     connect(m_theme, &ChameleonWindowTheme::windowRadiusChanged, this, &Chameleon::updateBorderPath);
@@ -381,9 +381,9 @@ qint32 Chameleon::menuIconHeight() const
 
 void Chameleon::initButtons()
 {
-    m_leftButtons = new KDecoration3::DecorationButtonGroup(KDecoration3::DecorationButtonGroup::Position::Left, this, &ChameleonButton::create);
-    m_rightButtons = new KDecoration3::DecorationButtonGroup(KDecoration3::DecorationButtonGroup::Position::Right, this, &ChameleonButton::create);
-    connect(m_rightButtons, &KDecoration3::DecorationButtonGroup::geometryChanged,
+    m_leftButtons = new KDecoration2::DecorationButtonGroup(KDecoration2::DecorationButtonGroup::Position::Left, this, &ChameleonButton::create);
+    m_rightButtons = new KDecoration2::DecorationButtonGroup(KDecoration2::DecorationButtonGroup::Position::Right, this, &ChameleonButton::create);
+    connect(m_rightButtons, &KDecoration2::DecorationButtonGroup::geometryChanged,
             this, &Chameleon::updateTitleBarArea, Qt::QueuedConnection);
 }
 
@@ -401,7 +401,7 @@ void Chameleon::updateButtonsGeometry()
 
     const int bWidth = 50 * m_theme->windowPixelRatio();
 
-    for (const QPointer<KDecoration3::DecorationButton> &button : m_leftButtons->buttons() + m_rightButtons->buttons()) {
+    for (const QPointer<KDecoration2::DecorationButton> &button : m_leftButtons->buttons() + m_rightButtons->buttons()) {
         button.data()->setGeometry(QRectF(QPoint(0, 0), QSizeF(bWidth, bHeight)));
     }
 
@@ -822,7 +822,7 @@ QColor Chameleon::getTextColor() const
 #else
     auto c = window();
 #endif
-    return c->color(c->isActive() ? KDecoration3::ColorGroup::Active : KDecoration3::ColorGroup::Inactive, KDecoration3::ColorRole::Foreground);
+    return c->color(c->isActive() ? KDecoration2::ColorGroup::Active : KDecoration2::ColorGroup::Inactive, KDecoration2::ColorRole::Foreground);
 }
 
 QColor Chameleon::getBackgroundColor() const
@@ -835,5 +835,5 @@ QColor Chameleon::getBackgroundColor() const
 #else
     auto c = window();
 #endif
-    return c->color(c->isActive() ? KDecoration3::ColorGroup::Active : KDecoration3::ColorGroup::Inactive, KDecoration3::ColorRole::TitleBar);
+    return c->color(c->isActive() ? KDecoration2::ColorGroup::Active : KDecoration2::ColorGroup::Inactive, KDecoration2::ColorRole::TitleBar);
 }

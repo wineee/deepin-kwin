@@ -9,7 +9,8 @@ find_package(KF6CoreAddons REQUIRED)
 find_package(X11 REQUIRED)
 find_package(KF6Config REQUIRED)
 find_package(KF6WindowSystem REQUIRED)
-find_package(KDecoration3 REQUIRED)
+
+#find_package(KDecoration2 REQUIRED)
 #include_directories(${Qt5Core_PRIVATE_INCLUDE_DIRS})
 #include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
 
@@ -38,7 +39,7 @@ add_library(
     kwinutils.cpp
     themes.qrc
 )
-set_target_properties(${TARGET_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.KDecoration3/")
+set_target_properties(${TARGET_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.KDecoration2/")
 
 target_link_libraries(
     ${TARGET_NAME}
@@ -51,11 +52,11 @@ target_link_libraries(
     X11
     XCB::XCB
     kwineffects
-    KDecoration3::KDecoration
+    KDecoration2::KDecoration
     KF6::CoreAddons
     KF6::ConfigCore
     KF6::WindowSystem
     kwin
 )
 
-install(TARGETS ${TARGET_NAME} DESTINATION ${KDE_INSTALL_PLUGINDIR}/org.kde.KDecoration3)
+install(TARGETS ${TARGET_NAME} DESTINATION ${KDE_INSTALL_PLUGINDIR}/org.kde.KDecoration2)

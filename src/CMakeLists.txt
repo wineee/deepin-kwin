@@ -246,8 +246,8 @@ target_link_libraries(kwin
     Plasma::KWaylandClient
     K::KGlobalAccelD
 
-    KDecoration3::KDecoration
-    KDecoration3::KDecoration3Private
+    KDecoration2::KDecoration
+    #KDecoration2::KDecoration2Private
 
     XCB::COMPOSITE
     XCB::CURSOR

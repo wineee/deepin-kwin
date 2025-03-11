@@ -57,7 +57,7 @@
 #include "xkb.h"
 #include "xwayland/xwayland_interface.h"
 
-#include <KDecoration3/Decoration>
+#include <KDecoration2/Decoration>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <decorations/decoratedwindow.h>

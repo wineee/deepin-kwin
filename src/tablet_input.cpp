@@ -17,7 +17,7 @@
 #include "window.h"
 #include "workspace.h"
 // KDecoration
-#include <KDecoration3/Decoration>
+#include <KDecoration2/Decoration>
 // Qt
 #include <QHoverEvent>
 #include <QWindow>

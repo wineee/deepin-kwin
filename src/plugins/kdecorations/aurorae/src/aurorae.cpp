@@ -12,10 +12,10 @@
 #include "kwinoffscreenquickview.h"
 // qml imports
 #include "decorationoptions.h"
-// KDecoration3
-#include <KDecoration3/DecoratedWindow>
-#include <KDecoration3/DecorationSettings>
-#include <KDecoration3/DecorationShadow>
+// KDecoration2
+#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/DecorationSettings>
+#include <KDecoration2/DecorationShadow>
 // KDE
 #include <KConfigGroup>
 #include <KConfigLoader>
@@ -111,7 +111,7 @@ void Helper::unref()
 static const QString s_defaultTheme = QStringLiteral("kwin4_decoration_qml_plastik");
 static const QString s_qmlPackageFolder = QStringLiteral("kwin/decorations/");
 /*
- * KDecoration3::BorderSize doesn't map to the indices used for the Aurorae SVG Button Sizes.
+ * KDecoration2::BorderSize doesn't map to the indices used for the Aurorae SVG Button Sizes.
  * BorderSize defines None and NoSideBorder as index 0 and 1. These do not make sense for Button
  * Size, thus we need to perform a mapping between the enum value and the config value.
  */
@@ -227,13 +227,13 @@ void Helper::init()
     qmlRegisterType<KWin::Borders>("org.kde.kwin.decoration", 0, 1, "Borders");
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-    qmlRegisterType<KDecoration3::Decoration>();
-    qmlRegisterType<KDecoration3::DecoratedWindow>();
+    qmlRegisterType<KDecoration2::Decoration>();
+    qmlRegisterType<KDecoration2::DecoratedWindow>();
 #else
-    qmlRegisterAnonymousType<KDecoration3::Decoration>("org.kde.kwin.decoration", 0);
-    qmlRegisterAnonymousType<KDecoration3::DecoratedWindow>("org.kde.kwin.decoration", 0);
+    qmlRegisterAnonymousType<KDecoration2::Decoration>("org.kde.kwin.decoration", 0);
+    qmlRegisterAnonymousType<KDecoration2::DecoratedWindow>("org.kde.kwin.decoration", 0);
 #endif
-    qRegisterMetaType<KDecoration3::BorderSize>();
+    qRegisterMetaType<KDecoration2::BorderSize>();
 }
 
 static QString findTheme(const QVariantList &args)
@@ -250,7 +250,7 @@ static QString findTheme(const QVariantList &args)
 }
 
 Decoration::Decoration(QObject *parent, const QVariantList &args)
-    : KDecoration3::Decoration(parent, args)
+    : KDecoration2::Decoration(parent, args)
     , m_item(nullptr)
     , m_borders(nullptr)
     , m_maximizedBorders(nullptr)
@@ -282,7 +282,7 @@ bool Decoration::init()
     KDecoration2::Decoration::init();
 #endif
     auto s = settings();
-    connect(s.get(), &KDecoration3::DecorationSettings::reconfigured, this, &Decoration::configChanged);
+    connect(s.get(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::configChanged);
 
     m_qmlContext = std::make_unique<QQmlContext>(Helper::instance().rootContext());
     m_qmlContext->setContextProperty(QStringLiteral("decoration"), this);
@@ -302,12 +302,12 @@ bool Decoration::init()
         AuroraeTheme *theme = new AuroraeTheme(this);
         theme->loadTheme(themeName, config);
         theme->setBorderSize(s->borderSize());
-        connect(s.get(), &KDecoration3::DecorationSettings::borderSizeChanged, theme, &AuroraeTheme::setBorderSize);
+        connect(s.get(), &KDecoration2::DecorationSettings::borderSizeChanged, theme, &AuroraeTheme::setBorderSize);
         auto readButtonSize = [this, theme] {
             const KSharedConfigPtr conf = KSharedConfig::openConfig(QStringLiteral("auroraerc"));
             const KConfigGroup themeGroup(conf, m_themeName.mid(16));
-            theme->setButtonSize((KDecoration3::BorderSize)(themeGroup.readEntry<int>("ButtonSize",
-                                                                                      int(KDecoration3::BorderSize::Normal) - s_indexMapper)
+            theme->setButtonSize((KDecoration2::BorderSize)(themeGroup.readEntry<int>("ButtonSize",
+                                                                                      int(KDecoration2::BorderSize::Normal) - s_indexMapper)
                                                             + s_indexMapper));
         };
         connect(this, &Decoration::configChanged, theme, readButtonSize);
@@ -382,8 +382,8 @@ bool Decoration::init()
     }
 
     auto decorationClient = clientPointer();
-    connect(decorationClient, &KDecoration3::DecoratedWindow::maximizedChanged, this, &Decoration::updateBorders);
-    connect(decorationClient, &KDecoration3::DecoratedWindow::shadedChanged, this, &Decoration::updateBorders);
+    connect(decorationClient, &KDecoration2::DecoratedWindow::maximizedChanged, this, &Decoration::updateBorders);
+    connect(decorationClient, &KDecoration2::DecoratedWindow::shadedChanged, this, &Decoration::updateBorders);
     updateBorders();
     if (m_view) {
         auto resizeWindow = [this] {
@@ -399,20 +399,20 @@ bool Decoration::init()
             updateBlur();
         };
         connect(this, &Decoration::bordersChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration3::DecoratedWindow::widthChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration3::DecoratedWindow::heightChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration3::DecoratedWindow::maximizedChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration3::DecoratedWindow::shadedChanged, this, resizeWindow);
+        connect(decorationClient, &KDecoration2::DecoratedWindow::widthChanged, this, resizeWindow);
+        connect(decorationClient, &KDecoration2::DecoratedWindow::heightChanged, this, resizeWindow);
+        connect(decorationClient, &KDecoration2::DecoratedWindow::maximizedChanged, this, resizeWindow);
+        connect(decorationClient, &KDecoration2::DecoratedWindow::shadedChanged, this, resizeWindow);
         resizeWindow();
         updateBuffer();
     } else {
         // create a dummy shadow for the configuration interface
         if (m_padding) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            auto s = QSharedPointer<KDecoration3::DecorationShadow>::create();
+            auto s = QSharedPointer<KDecoration2::DecorationShadow>::create();
             s->setPadding(*m_padding);
 #else
-            auto s = std::shared_ptr<KDecoration3::DecorationShadow>(new KDecoration3::DecorationShadow);
+            auto s = std::shared_ptr<KDecoration2::DecorationShadow>(new KDecoration2::DecorationShadow);
             s->setPadding(QMarginsF(m_padding->left(), m_padding->top(), m_padding->right(), m_padding->bottom()));
 #endif
             s->setInnerShadowRect(QRect(m_padding->left(), m_padding->top(), 1, 1));
@@ -521,11 +521,11 @@ void Decoration::updateShadow()
         }
         if (updateShadow) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            auto s = QSharedPointer<KDecoration3::DecorationShadow>::create();
+            auto s = QSharedPointer<KDecoration2::DecorationShadow>::create();
             s->setShadow(img);
             s->setPadding(*m_padding);
 #else
-            auto s = std::shared_ptr<KDecoration3::DecorationShadow>(new KDecoration3::DecorationShadow);
+            auto s = std::shared_ptr<KDecoration2::DecorationShadow>(new KDecoration2::DecorationShadow);
             s->setShadow(img);
             s->setPadding(QMarginsF(m_padding->left(), m_padding->top(), m_padding->right(), m_padding->bottom()));
 #endif
@@ -538,11 +538,11 @@ void Decoration::updateShadow()
     } else {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         if (!oldShadow.isNull()) {
-            setShadow(QSharedPointer<KDecoration3::DecorationShadow>());
+            setShadow(QSharedPointer<KDecoration2::DecorationShadow>());
         }
 #else
         if (oldShadow) {
-            setShadow(std::shared_ptr<KDecoration3::DecorationShadow>());
+            setShadow(std::shared_ptr<KDecoration2::DecorationShadow>());
         }
 #endif
     }
@@ -554,7 +554,7 @@ void Decoration::hoverEnterEvent(QHoverEvent *event)
         event->setAccepted(false);
         m_view->forwardMouseEvent(event);
     }
-    KDecoration3::Decoration::hoverEnterEvent(event);
+    KDecoration2::Decoration::hoverEnterEvent(event);
 }
 
 void Decoration::hoverLeaveEvent(QHoverEvent *event)
@@ -562,7 +562,7 @@ void Decoration::hoverLeaveEvent(QHoverEvent *event)
     if (m_view) {
         m_view->forwardMouseEvent(event);
     }
-    KDecoration3::Decoration::hoverLeaveEvent(event);
+    KDecoration2::Decoration::hoverLeaveEvent(event);
 }
 
 void Decoration::hoverMoveEvent(QHoverEvent *event)
@@ -574,7 +574,7 @@ void Decoration::hoverMoveEvent(QHoverEvent *event)
         m_view->forwardMouseEvent(&cloneEvent);
         event->setAccepted(cloneEvent.isAccepted());
     }
-    KDecoration3::Decoration::hoverMoveEvent(event);
+    KDecoration2::Decoration::hoverMoveEvent(event);
 }
 
 void Decoration::mouseMoveEvent(QMouseEvent *event)
@@ -582,7 +582,7 @@ void Decoration::mouseMoveEvent(QMouseEvent *event)
     if (m_view) {
         m_view->forwardMouseEvent(event);
     }
-    KDecoration3::Decoration::mouseMoveEvent(event);
+    KDecoration2::Decoration::mouseMoveEvent(event);
 }
 
 void Decoration::mousePressEvent(QMouseEvent *event)
@@ -590,7 +590,7 @@ void Decoration::mousePressEvent(QMouseEvent *event)
     if (m_view) {
         m_view->forwardMouseEvent(event);
     }
-    KDecoration3::Decoration::mousePressEvent(event);
+    KDecoration2::Decoration::mousePressEvent(event);
 }
 
 void Decoration::mouseReleaseEvent(QMouseEvent *event)
@@ -598,7 +598,7 @@ void Decoration::mouseReleaseEvent(QMouseEvent *event)
     if (m_view) {
         m_view->forwardMouseEvent(event);
     }
-    KDecoration3::Decoration::mouseReleaseEvent(event);
+    KDecoration2::Decoration::mouseReleaseEvent(event);
 }
 
 void Decoration::installTitleItem(QQuickItem *item)
@@ -625,7 +625,7 @@ void Decoration::updateExtendedBorders()
     int extRight = m_extendedBorders->right();
     int extBottom = m_extendedBorders->bottom();
 
-    if (settings()->borderSize() == KDecoration3::BorderSize::None) {
+    if (settings()->borderSize() == KDecoration2::BorderSize::None) {
         if (!clientPointer()->isMaximizedHorizontally()) {
             extLeft = std::max(m_extendedBorders->left(), extSize);
             extRight = std::max(m_extendedBorders->right(), extSize);
@@ -634,7 +634,7 @@ void Decoration::updateExtendedBorders()
             extBottom = std::max(m_extendedBorders->bottom(), extSize);
         }
 
-    } else if (settings()->borderSize() == KDecoration3::BorderSize::NoSides && !clientPointer()->isMaximizedHorizontally()) {
+    } else if (settings()->borderSize() == KDecoration2::BorderSize::NoSides && !clientPointer()->isMaximizedHorizontally()) {
         extLeft = std::max(m_extendedBorders->left(), extSize);
         extRight = std::max(m_extendedBorders->right(), extSize);
     }
@@ -685,7 +685,7 @@ void Decoration::updateBuffer()
     update();
 }
 
-KDecoration3::DecoratedWindow *Decoration::clientPointer() const
+KDecoration2::DecoratedWindow *Decoration::clientPointer() const
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return client().toStrongRef().data();
@@ -701,10 +701,10 @@ QQuickItem *Decoration::item() const
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 ThemeProvider::ThemeProvider(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
-    : KDecoration3::DecorationThemeProvider(parent, data, args)
+    : KDecoration2::DecorationThemeProvider(parent, data, args)
 #else
 ThemeProvider::ThemeProvider(QObject *parent, const KPluginMetaData &data)
-    : KDecoration3::DecorationThemeProvider(parent)
+    : KDecoration2::DecorationThemeProvider(parent)
 #endif
     , m_data(data)
 {
@@ -721,7 +721,7 @@ void ThemeProvider::findAllQmlThemes()
 {
     const auto offers = KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Decoration"), s_qmlPackageFolder);
     for (const auto &offer : offers) {
-        KDecoration3::DecorationThemeMetaData data;
+        KDecoration2::DecorationThemeMetaData data;
         data.setPluginId(m_data.pluginId());
         data.setThemeName(offer.pluginId());
         data.setVisibleName(offer.name());
@@ -764,7 +764,7 @@ void ThemeProvider::findAllSvgThemes()
             name = packageName;
         }
 
-        KDecoration3::DecorationThemeMetaData data;
+        KDecoration2::DecorationThemeMetaData data;
         data.setPluginId(m_data.pluginId());
         data.setThemeName(QLatin1String("__aurorae__svg__") + packageName);
         data.setVisibleName(name);
@@ -795,7 +795,7 @@ bool ThemeProvider::hasConfiguration(const QString &theme)
 ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
     , m_theme(findTheme(args))
-    , m_buttonSize(int(KDecoration3::BorderSize::Normal) - s_indexMapper)
+    , m_buttonSize(int(KDecoration2::BorderSize::Normal) - s_indexMapper)
 {
     setLayout(new QVBoxLayout(this));
     init();
@@ -836,7 +836,7 @@ void ConfigurationModule::initSvg()
     skel->setCurrentGroup(m_theme.mid(16));
     skel->addItemInt(QStringLiteral("ButtonSize"),
                      m_buttonSize,
-                     int(KDecoration3::BorderSize::Normal) - s_indexMapper,
+                     int(KDecoration2::BorderSize::Normal) - s_indexMapper,
                      QStringLiteral("ButtonSize"));
     addConfig(skel, form);
 }

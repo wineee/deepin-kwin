@@ -37,8 +37,8 @@
 #include "wayland/dderestrict_interface.h"
 #include "scene/surfaceitem.h"
 
-#include <KDecoration3/DecoratedWindow>
-#include <KDecoration3/Decoration>
+#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/Decoration>
 
 using namespace KWaylandServer;
 

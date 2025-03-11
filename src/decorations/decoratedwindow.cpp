@@ -13,8 +13,8 @@
 #include "window.h"
 #include "workspace.h"
 
-#include <KDecoration3/DecoratedWindow>
-#include <KDecoration3/Decoration>
+#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/Decoration>
 
 #include <QDebug>
 #include <QStyle>
@@ -25,7 +25,7 @@ namespace KWin
 namespace Decoration
 {
 
-DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration)
+DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration2::DecoratedWindow *decoratedClient, KDecoration2::Decoration *decoration)
     : QObject()
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     , DecoratedWindowPrivate(decoratedClient, decoration)
@@ -63,20 +63,20 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
         Q_EMIT decoratedClient->iconChanged(window->icon());
     });
     connect(window, &Window::shadeChanged, this, &Decoration::DecoratedWindowImpl::signalShadeChange);
-    connect(window, &Window::keepAboveChanged, decoratedClient, &KDecoration3::DecoratedWindow::keepAboveChanged);
-    connect(window, &Window::keepBelowChanged, decoratedClient, &KDecoration3::DecoratedWindow::keepBelowChanged);
+    connect(window, &Window::keepAboveChanged, decoratedClient, &KDecoration2::DecoratedWindow::keepAboveChanged);
+    connect(window, &Window::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedWindow::keepBelowChanged);
     connect(window, &Window::quickTileModeChanged, decoratedClient, [this, decoratedClient]() {
         Q_EMIT decoratedClient->adjacentScreenEdgesChanged(adjacentScreenEdges());
     });
-    connect(window, &Window::closeableChanged, decoratedClient, &KDecoration3::DecoratedWindow::closeableChanged);
-    connect(window, &Window::shadeableChanged, decoratedClient, &KDecoration3::DecoratedWindow::shadeableChanged);
-    connect(window, &Window::minimizeableChanged, decoratedClient, &KDecoration3::DecoratedWindow::minimizeableChanged);
-    connect(window, &Window::maximizeableChanged, decoratedClient, &KDecoration3::DecoratedWindow::maximizeableChanged);
+    connect(window, &Window::closeableChanged, decoratedClient, &KDecoration2::DecoratedWindow::closeableChanged);
+    connect(window, &Window::shadeableChanged, decoratedClient, &KDecoration2::DecoratedWindow::shadeableChanged);
+    connect(window, &Window::minimizeableChanged, decoratedClient, &KDecoration2::DecoratedWindow::minimizeableChanged);
+    connect(window, &Window::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedWindow::maximizeableChanged);
 
-    connect(window, &Window::paletteChanged, decoratedClient, &KDecoration3::DecoratedWindow::paletteChanged);
+    connect(window, &Window::paletteChanged, decoratedClient, &KDecoration2::DecoratedWindow::paletteChanged);
 
-    connect(window, &Window::hasApplicationMenuChanged, decoratedClient, &KDecoration3::DecoratedWindow::hasApplicationMenuChanged);
-    connect(window, &Window::applicationMenuActiveChanged, decoratedClient, &KDecoration3::DecoratedWindow::applicationMenuActiveChanged);
+    connect(window, &Window::hasApplicationMenuChanged, decoratedClient, &KDecoration2::DecoratedWindow::hasApplicationMenuChanged);
+    connect(window, &Window::applicationMenuActiveChanged, decoratedClient, &KDecoration2::DecoratedWindow::applicationMenuActiveChanged);
 
     m_toolTipWakeUp.setSingleShot(true);
     connect(&m_toolTipWakeUp, &QTimer::timeout, this, [this]() {
@@ -179,7 +179,7 @@ void DecoratedWindowImpl::requestClose()
     QMetaObject::invokeMethod(m_window, &Window::closeWindow, Qt::QueuedConnection);
 }
 
-QColor DecoratedWindowImpl::color(KDecoration3::ColorGroup group, KDecoration3::ColorRole role) const
+QColor DecoratedWindowImpl::color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const
 {
     auto dp = m_window->decorationPalette();
     if (dp) {

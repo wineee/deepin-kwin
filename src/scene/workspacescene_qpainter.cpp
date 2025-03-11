@@ -13,7 +13,7 @@
 #include "window.h"
 
 // Qt
-#include <KDecoration3/Decoration>
+#include <KDecoration2/Decoration>
 #include <QDebug>
 #include <QPainter>
 

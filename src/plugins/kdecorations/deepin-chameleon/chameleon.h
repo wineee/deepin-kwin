@@ -23,8 +23,8 @@
 
 #include "chameleontheme.h"
 
-#include <KDecoration3/Decoration>
-#include <KDecoration3/DecorationButtonGroup>
+#include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationButtonGroup>
 
 #include <kwineffects.h>
 
@@ -39,7 +39,7 @@
 
 class Settings;
 class ChameleonWindowTheme;
-class Chameleon : public KDecoration3::Decoration
+class Chameleon : public KDecoration2::Decoration
 {
     Q_OBJECT
 
@@ -133,8 +133,8 @@ private:
     QString m_title;
     QRect m_titleArea;
 
-    KDecoration3::DecorationButtonGroup *m_leftButtons = nullptr;
-    KDecoration3::DecorationButtonGroup *m_rightButtons = nullptr;
+    KDecoration2::DecorationButtonGroup *m_leftButtons = nullptr;
+    KDecoration2::DecorationButtonGroup *m_rightButtons = nullptr;
 
     QPointer<KWin::EffectWindow> m_effect;
     QFont m_font;

@@ -53,8 +53,8 @@
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "splitscreen/splitmanage.h"
 
-#include <KDecoration3/DecoratedWindow>
-#include <KDecoration3/Decoration>
+#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/Decoration>
 
 #include <KDesktopFile>
 
@@ -3232,19 +3232,19 @@ void Window::endInteractiveMoveResize()
     updateCursor();
 }
 
-void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
+void Window::setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration)
 {
     if (m_decoration.decoration == decoration) {
         return;
     }
     if (decoration) {
-        QMetaObject::invokeMethod(decoration.get(), QOverload<>::of(&KDecoration3::Decoration::update), Qt::QueuedConnection);
-        connect(decoration.get(), &KDecoration3::Decoration::shadowChanged, this, &Window::updateShadow);
-        connect(decoration.get(), &KDecoration3::Decoration::bordersChanged,
+        QMetaObject::invokeMethod(decoration.get(), QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
+        connect(decoration.get(), &KDecoration2::Decoration::shadowChanged, this, &Window::updateShadow);
+        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged,
                 this, &Window::updateDecorationInputShape);
-        connect(decoration.get(), &KDecoration3::Decoration::resizeOnlyBordersChanged,
+        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged,
                 this, &Window::updateDecorationInputShape);
-        connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
+        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
             GeometryUpdatesBlocker blocker(this);
             const QRectF oldGeometry = moveResizeGeometry();
             if (!isShade()) {
@@ -3252,7 +3252,7 @@ void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
             }
             Q_EMIT geometryShapeChanged(this, oldGeometry);
         });
-        connect(decoratedWindow()->decoratedWindow(), &KDecoration3::DecoratedWindow::sizeChanged,
+        connect(decoratedWindow()->decoratedWindow(), &KDecoration2::DecoratedWindow::sizeChanged,
                 this, &Window::updateDecorationInputShape);
     }
     m_decoration.decoration = decoration;

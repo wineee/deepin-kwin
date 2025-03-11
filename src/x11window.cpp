@@ -33,8 +33,8 @@
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <KDecoration3/DecoratedWindow>
-#include <KDecoration3/Decoration>
+#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/Decoration>
 // KDE
 #include <KLocalizedString>
 #include <KStartupInfo>
@@ -1208,11 +1208,11 @@ void X11Window::invalidateDecoration()
 
 void X11Window::createDecoration(const QRectF &oldgeom)
 {
-    std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
+    std::shared_ptr<KDecoration2::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
     if (decoration) {
-        connect(decoration.get(), &KDecoration3::Decoration::resizeOnlyBordersChanged, this, &X11Window::updateInputWindow);
-        connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, &X11Window::updateFrameExtents);
-        connect(decoratedWindow()->decoratedWindow(), &KDecoration3::DecoratedWindow::sizeChanged, this, &X11Window::updateInputWindow);
+        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &X11Window::updateInputWindow);
+        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, &X11Window::updateFrameExtents);
+        connect(decoratedWindow()->decoratedWindow(), &KDecoration2::DecoratedWindow::sizeChanged, this, &X11Window::updateInputWindow);
     }
     setDecoration(decoration);
 

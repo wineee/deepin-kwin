@@ -32,8 +32,8 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDecoration3/DecoratedWindow>
-#include <KDecoration3/Decoration>
+#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/Decoration>
 
 #include <QPainter>
 #include <QDebug>
@@ -138,7 +138,7 @@ bool ChameleonConfig::setTheme(QString theme)
 void ChameleonConfig::onConfigChanged()
 {
     KConfig config("kwinrc", KConfig::CascadeConfig);
-    KConfigGroup group_decoration(&config, "org.kde.KDecoration3");
+    KConfigGroup group_decoration(&config, "org.kde.KDecoration2");
 
     bool active = group_decoration.readEntry("library") == "com.deepin.chameleon";
 

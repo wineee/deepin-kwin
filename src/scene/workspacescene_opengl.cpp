@@ -109,7 +109,7 @@ private:
         std::shared_ptr<GLTexture> texture;
         QVector<SceneOpenGLShadow *> shadows;
     };
-    QHash<KDecoration3::DecorationShadow *, Data> m_cache;
+    QHash<KDecoration2::DecorationShadow *, Data> m_cache;
 };
 
 DecorationShadowTextureCache &DecorationShadowTextureCache::instance()

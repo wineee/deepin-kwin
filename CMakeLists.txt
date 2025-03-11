@@ -50,6 +50,8 @@ include(ECMOptionalAddSubdirectory)
 include(ECMConfiguredInstall)
 include(ECMQtDeclareLoggingCategory)
 
+add_subdirectory(kf5qt6)
+
 set(QT_MAJOR_VERSION "6")
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS
@@ -151,11 +153,11 @@ set_package_properties(KF6Kirigami2 PROPERTIES
     TYPE RUNTIME
 )
 
-find_package(KDecoration3 ${PROJECT_VERSION} CONFIG)
-set_package_properties(KDecoration3 PROPERTIES
-    TYPE REQUIRED
-    PURPOSE "Required for server side decoration support"
-)
+# find_package(KDecoration2 ${PROJECT_VERSION} CONFIG)
+# set_package_properties(KDecoration2 PROPERTIES
+#     TYPE REQUIRED
+#     PURPOSE "Required for server side decoration support"
+# )
 
 find_package(KF6KCMUtils ${PROJECT_VERSION} CONFIG)
 find_package(KF6Service ${PROJECT_VERSION} CONFIG)

@@ -7,8 +7,8 @@
 #pragma once
 
 #include <KCModule>
-#include <KDecoration3/Decoration>
-#include <KDecoration3/DecorationThemeProvider>
+#include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationThemeProvider>
 #include <KPluginMetaData>
 #include <QElapsedTimer>
 #include <QVariant>
@@ -29,10 +29,10 @@ class OffscreenQuickView;
 namespace Aurorae
 {
 
-class Decoration : public KDecoration3::Decoration
+class Decoration : public KDecoration2::Decoration
 {
     Q_OBJECT
-    Q_PROPERTY(KDecoration3::DecoratedWindow *client READ clientPointer CONSTANT)
+    Q_PROPERTY(KDecoration2::DecoratedWindow *client READ clientPointer CONSTANT)
     Q_PROPERTY(QQuickItem *item READ item)
 public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());
@@ -45,7 +45,7 @@ public:
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
-    KDecoration3::DecoratedWindow *clientPointer() const;
+    KDecoration2::DecoratedWindow *clientPointer() const;
     QQuickItem *item() const;
 
 public Q_SLOTS:
@@ -96,7 +96,7 @@ private:
     std::unique_ptr<KWin::OffscreenQuickView> m_view;
 };
 
-class ThemeProvider : public KDecoration3::DecorationThemeProvider
+class ThemeProvider : public KDecoration2::DecorationThemeProvider
 {
     Q_OBJECT
 public:
@@ -105,7 +105,7 @@ public:
 #else
     explicit ThemeProvider(QObject *parent, const KPluginMetaData &data);
 #endif
-    QList<KDecoration3::DecorationThemeMetaData> themes() const override
+    QList<KDecoration2::DecorationThemeMetaData> themes() const override
     {
         return m_themes;
     }
@@ -115,7 +115,7 @@ private:
     void findAllQmlThemes();
     void findAllSvgThemes();
     bool hasConfiguration(const QString &theme);
-    QList<KDecoration3::DecorationThemeMetaData> m_themes;
+    QList<KDecoration2::DecorationThemeMetaData> m_themes;
     const KPluginMetaData m_data;
 };
 

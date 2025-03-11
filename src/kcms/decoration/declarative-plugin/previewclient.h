@@ -7,20 +7,20 @@
 
 #include "../../../decorations/decorationpalette.h"
 
-#include <KDecoration3/Private/DecoratedWindowPrivate>
+#include <KDecoration2/Private/DecoratedWindowPrivate>
 #include <QObject>
 #include <QPalette>
 
 class QAbstractItemModel;
 
-namespace KDecoration3
+namespace KDecoration2
 {
 namespace Preview
 {
 class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedWindowPrivate
 {
     Q_OBJECT
-    Q_PROPERTY(KDecoration3::Decoration *decoration READ decoration CONSTANT)
+    Q_PROPERTY(KDecoration2::Decoration *decoration READ decoration CONSTANT)
     Q_PROPERTY(QString caption READ caption WRITE setCaption NOTIFY captionChanged)
     Q_PROPERTY(QIcon icon READ icon WRITE setIcon NOTIFY iconChanged)
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconNameChanged)
@@ -196,4 +196,4 @@ private:
 };
 
 } // namespace Preview
-} // namespace KDecoration3
+} // namespace KDecoration2

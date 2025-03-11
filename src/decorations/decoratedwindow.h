@@ -9,7 +9,7 @@
 #pragma once
 #include "options.h"
 
-#include <KDecoration3/Private/DecoratedWindowPrivate>
+#include <KDecoration2/Private/DecoratedWindowPrivate>
 
 #include <QDeadlineTimer>
 #include <QObject>
@@ -24,14 +24,14 @@ namespace Decoration
 {
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivate
+class DecoratedWindowImpl : public QObject, public KDecoration2::DecoratedWindowPrivate
 #else
-class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivateV2
+class DecoratedWindowImpl : public QObject, public KDecoration2::DecoratedWindowPrivateV2
 #endif
 {
     Q_OBJECT
 public:
-    explicit DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration);
+    explicit DecoratedWindowImpl(Window *window, KDecoration2::DecoratedWindow *decoratedClient, KDecoration2::Decoration *decoration);
     ~DecoratedWindowImpl() override;
     QString caption() const override;
     qreal height() const override;
@@ -52,7 +52,7 @@ public:
     bool isShadeable() const override;
     bool isShaded() const override;
     QPalette palette() const override;
-    QColor color(KDecoration3::ColorGroup group, KDecoration3::ColorRole role) const override;
+    QColor color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const override;
     bool providesContextHelp() const override;
     QSizeF size() const override;
     qreal width() const override;
@@ -87,9 +87,9 @@ public:
     {
         return m_window;
     }
-    KDecoration3::DecoratedWindow *decoratedWindow()
+    KDecoration2::DecoratedWindow *decoratedWindow()
     {
-        return KDecoration3::DecoratedWindowPrivate::window();
+        return KDecoration2::DecoratedWindowPrivate::window();
     }
 
     void signalShadeChange();

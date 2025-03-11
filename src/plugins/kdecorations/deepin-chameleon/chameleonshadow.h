@@ -23,7 +23,7 @@
 
 #include "chameleontheme.h"
 
-#include <KDecoration3/DecorationShadow>
+#include <KDecoration2/DecorationShadow>
 
 #include <QSharedPointer>
 
@@ -34,9 +34,9 @@ public:
 
     static QString buildShadowCacheKey(const ChameleonTheme::ThemeConfig *config, qreal scale);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QSharedPointer<KDecoration3::DecorationShadow> getShadow(const ChameleonTheme::ThemeConfig *config, qreal scale);
+    QSharedPointer<KDecoration2::DecorationShadow> getShadow(const ChameleonTheme::ThemeConfig *config, qreal scale);
 #else
-    std::shared_ptr<KDecoration3::DecorationShadow> getShadow(const ChameleonTheme::ThemeConfig *config, qreal scale);
+    std::shared_ptr<KDecoration2::DecorationShadow> getShadow(const ChameleonTheme::ThemeConfig *config, qreal scale);
 #endif
     void clearCache();
 
@@ -45,11 +45,11 @@ protected:
 
 private:
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QMap<QString, QSharedPointer<KDecoration3::DecorationShadow>> m_shadowCache;
-    QSharedPointer<KDecoration3::DecorationShadow> m_emptyShadow;
+    QMap<QString, QSharedPointer<KDecoration2::DecorationShadow>> m_shadowCache;
+    QSharedPointer<KDecoration2::DecorationShadow> m_emptyShadow;
 #else
-    QMap<QString, std::shared_ptr<KDecoration3::DecorationShadow>> m_shadowCache;
-    std::shared_ptr<KDecoration3::DecorationShadow> m_emptyShadow;
+    QMap<QString, std::shared_ptr<KDecoration2::DecorationShadow>> m_shadowCache;
+    std::shared_ptr<KDecoration2::DecorationShadow> m_emptyShadow;
 #endif
 };
 

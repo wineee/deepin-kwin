@@ -28,7 +28,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-#include <KDecoration3/Decoration>
+#include <KDecoration2/Decoration>
 
 Q_LOGGING_CATEGORY(KWIN_BLUR, "kwin_effect_blur", QtWarningMsg)
 
@@ -317,7 +317,7 @@ void BlurEffect::setupDecorationConnections(EffectWindow *w)
         return;
     }
 
-    connect(w->decoration(), &KDecoration3::Decoration::blurRegionChanged, this, [this, w]() {
+    connect(w->decoration(), &KDecoration2::Decoration::blurRegionChanged, this, [this, w]() {
         updateBlurRegion(w);
     });
 }

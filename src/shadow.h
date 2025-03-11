@@ -12,7 +12,7 @@
 #include <QObject>
 #include <kwineffects.h>
 
-namespace KDecoration3
+namespace KDecoration2
 {
 class Decoration;
 class DecorationShadow;
@@ -87,14 +87,14 @@ public:
     QImage decorationShadowImage() const;
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QWeakPointer<KDecoration3::DecorationShadow> decorationShadow() const
+    QWeakPointer<KDecoration2::DecorationShadow> decorationShadow() const
     {
         return m_decorationShadow.toWeakRef();
     }
 #else
-    std::weak_ptr<KDecoration3::DecorationShadow> decorationShadow() const
+    std::weak_ptr<KDecoration2::DecorationShadow> decorationShadow() const
     {
-        return std::weak_ptr<KDecoration3::DecorationShadow>(m_decorationShadow);
+        return std::weak_ptr<KDecoration2::DecorationShadow>(m_decorationShadow);
     }
 #endif
 
@@ -160,7 +160,7 @@ private:
     static QVector<uint32_t> readX11ShadowProperty(xcb_window_t id);
     bool init();
     bool init(const QVector<uint32_t> &shadowData);
-    bool init(KDecoration3::Decoration *decoration);
+    bool init(KDecoration2::Decoration *decoration);
     bool init(const QPointer<KWaylandServer::ShadowInterface> &shadow);
     bool init(const QWindow *window);
     Window *m_window;
@@ -176,9 +176,9 @@ private:
     QSizeF m_cachedSize;
     // Decoration based shadows
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QSharedPointer<KDecoration3::DecorationShadow> m_decorationShadow;
+    QSharedPointer<KDecoration2::DecorationShadow> m_decorationShadow;
 #else
-    std::shared_ptr<KDecoration3::DecorationShadow> m_decorationShadow;
+    std::shared_ptr<KDecoration2::DecorationShadow> m_decorationShadow;
 #endif
 };
 
