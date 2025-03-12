@@ -13,7 +13,7 @@
 // qml imports
 #include "decorationoptions.h"
 // KDecoration2
-#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/DecoratedClient>
 #include <KDecoration2/DecorationSettings>
 #include <KDecoration2/DecorationShadow>
 // KDE
@@ -50,10 +50,7 @@ K_PLUGIN_FACTORY_WITH_JSON(AuroraeDecoFactory,
                            "aurorae.json",
                            registerPlugin<Aurorae::Decoration>();
                            registerPlugin<Aurorae::ThemeProvider>();
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-                           registerPlugin<Aurorae::ConfigurationModule>();
-#endif
-)
+                           registerPlugin<Aurorae::ConfigurationModule>();)
 
 namespace Aurorae
 {
@@ -228,10 +225,10 @@ void Helper::init()
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     qmlRegisterType<KDecoration2::Decoration>();
-    qmlRegisterType<KDecoration2::DecoratedWindow>();
+    qmlRegisterType<KDecoration2::DecoratedClient>();
 #else
     qmlRegisterAnonymousType<KDecoration2::Decoration>("org.kde.kwin.decoration", 0);
-    qmlRegisterAnonymousType<KDecoration2::DecoratedWindow>("org.kde.kwin.decoration", 0);
+    qmlRegisterAnonymousType<KDecoration2::DecoratedClient>("org.kde.kwin.decoration", 0);
 #endif
     qRegisterMetaType<KDecoration2::BorderSize>();
 }
@@ -271,28 +268,18 @@ Decoration::~Decoration()
     Helper::instance().unref();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void Decoration::init()
-#else
-bool Decoration::init()
-#endif
 {
-    Helper::instance().rootContext()->setContextProperty(QStringLiteral("decorationSettings"), settings().get());
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    Helper::instance().rootContext()->setContextProperty(QStringLiteral("decorationSettings"), settings().data());
     KDecoration2::Decoration::init();
-#endif
     auto s = settings();
-    connect(s.get(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::configChanged);
+    connect(s.data(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::configChanged);
 
     m_qmlContext = std::make_unique<QQmlContext>(Helper::instance().rootContext());
     m_qmlContext->setContextProperty(QStringLiteral("decoration"), this);
     auto component = Helper::instance().component(m_themeName);
     if (!component) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         return;
-#else
-        return false;
-#endif
     }
     if (component == Helper::instance().svgComponent()) {
         // load SVG theme
@@ -302,7 +289,7 @@ bool Decoration::init()
         AuroraeTheme *theme = new AuroraeTheme(this);
         theme->loadTheme(themeName, config);
         theme->setBorderSize(s->borderSize());
-        connect(s.get(), &KDecoration2::DecorationSettings::borderSizeChanged, theme, &AuroraeTheme::setBorderSize);
+        connect(s.data(), &KDecoration2::DecorationSettings::borderSizeChanged, theme, &AuroraeTheme::setBorderSize);
         auto readButtonSize = [this, theme] {
             const KSharedConfigPtr conf = KSharedConfig::openConfig(QStringLiteral("auroraerc"));
             const KConfigGroup themeGroup(conf, m_themeName.mid(16));
@@ -323,11 +310,7 @@ bool Decoration::init()
                 qCWarning(AURORAE) << error;
             }
         }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         return;
-#else
-        return false;
-#endif
     }
 
     QVariant visualParent = property("visualParent");
@@ -382,16 +365,12 @@ bool Decoration::init()
     }
 
     auto decorationClient = clientPointer();
-    connect(decorationClient, &KDecoration2::DecoratedWindow::maximizedChanged, this, &Decoration::updateBorders);
-    connect(decorationClient, &KDecoration2::DecoratedWindow::shadedChanged, this, &Decoration::updateBorders);
+    connect(decorationClient, &KDecoration2::DecoratedClient::maximizedChanged, this, &Decoration::updateBorders);
+    connect(decorationClient, &KDecoration2::DecoratedClient::shadedChanged, this, &Decoration::updateBorders);
     updateBorders();
     if (m_view) {
         auto resizeWindow = [this] {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             QRect rect(QPoint(0, 0), size());
-#else
-            QRect rect(QPoint(0, 0), size().toSize());
-#endif
             if (m_padding && !clientPointer()->isMaximized()) {
                 rect = rect.adjusted(-m_padding->left(), -m_padding->top(), m_padding->right(), m_padding->bottom());
             }
@@ -399,29 +378,21 @@ bool Decoration::init()
             updateBlur();
         };
         connect(this, &Decoration::bordersChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration2::DecoratedWindow::widthChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration2::DecoratedWindow::heightChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration2::DecoratedWindow::maximizedChanged, this, resizeWindow);
-        connect(decorationClient, &KDecoration2::DecoratedWindow::shadedChanged, this, resizeWindow);
+        connect(decorationClient, &KDecoration2::DecoratedClient::widthChanged, this, resizeWindow);
+        connect(decorationClient, &KDecoration2::DecoratedClient::heightChanged, this, resizeWindow);
+        connect(decorationClient, &KDecoration2::DecoratedClient::maximizedChanged, this, resizeWindow);
+        connect(decorationClient, &KDecoration2::DecoratedClient::shadedChanged, this, resizeWindow);
         resizeWindow();
         updateBuffer();
     } else {
         // create a dummy shadow for the configuration interface
         if (m_padding) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             auto s = QSharedPointer<KDecoration2::DecorationShadow>::create();
             s->setPadding(*m_padding);
-#else
-            auto s = std::shared_ptr<KDecoration2::DecorationShadow>(new KDecoration2::DecorationShadow);
-            s->setPadding(QMarginsF(m_padding->left(), m_padding->top(), m_padding->right(), m_padding->bottom()));
-#endif
             s->setInnerShadowRect(QRect(m_padding->left(), m_padding->top(), 1, 1));
             setShadow(s);
         }
     }
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    return true;
-#endif
 }
 
 QVariant Decoration::readConfig(const QString &key, const QVariant &defaultValue)
@@ -447,20 +418,12 @@ void Decoration::updateBorders()
     if (!b) {
         return;
     }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     setBorders(*b);
-#else
-    setBorders(QMarginsF(b->left(), b->top(), b->right(), b->bottom()));
-#endif
 
     updateExtendedBorders();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
-#else
-void Decoration::paint(QPainter *painter, const QRectF &repaintRegion)
-#endif
 {
     if (!m_view) {
         return;
@@ -468,11 +431,9 @@ void Decoration::paint(QPainter *painter, const QRectF &repaintRegion)
 
     const QImage image = m_view->bufferAsImage();
     const qreal dpr = image.devicePixelRatioF();
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
     QRect nativeContentRect = QRect(m_contentRect.topLeft() * dpr, m_contentRect.size() * dpr);
-#else
-    QRectF nativeContentRect = QRectF(m_contentRect.topLeft() * dpr, m_contentRect.size() * dpr);
-#endif
+
     painter->fillRect(rect(), Qt::transparent);
     painter->drawImage(rect(), image, nativeContentRect);
 }
@@ -485,11 +446,7 @@ void Decoration::updateShadow()
     bool updateShadow = false;
     const auto oldShadow = shadow();
     if (m_padding && (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) && !clientPointer()->isMaximized()) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         if (oldShadow.isNull()) {
-#else
-        if (!oldShadow) {
-#endif
             updateShadow = true;
         } else {
             // compare padding
@@ -520,15 +477,9 @@ void Decoration::updateShadow()
             updateShadow = (oldShadow->shadow() != img);
         }
         if (updateShadow) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             auto s = QSharedPointer<KDecoration2::DecorationShadow>::create();
             s->setShadow(img);
             s->setPadding(*m_padding);
-#else
-            auto s = std::shared_ptr<KDecoration2::DecorationShadow>(new KDecoration2::DecorationShadow);
-            s->setShadow(img);
-            s->setPadding(QMarginsF(m_padding->left(), m_padding->top(), m_padding->right(), m_padding->bottom()));
-#endif
             s->setInnerShadowRect(QRect(m_padding->left(),
                                         m_padding->top(),
                                         imageSize.width() - m_padding->left() - m_padding->right(),
@@ -536,15 +487,9 @@ void Decoration::updateShadow()
             setShadow(s);
         }
     } else {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         if (!oldShadow.isNull()) {
             setShadow(QSharedPointer<KDecoration2::DecorationShadow>());
         }
-#else
-        if (oldShadow) {
-            setShadow(std::shared_ptr<KDecoration2::DecorationShadow>());
-        }
-#endif
     }
 }
 
@@ -685,13 +630,9 @@ void Decoration::updateBuffer()
     update();
 }
 
-KDecoration2::DecoratedWindow *Decoration::clientPointer() const
+KDecoration2::DecoratedClient *Decoration::clientPointer() const
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return client().toStrongRef().data();
-#else
-    return window();
-#endif
 }
 
 QQuickItem *Decoration::item() const
@@ -699,13 +640,8 @@ QQuickItem *Decoration::item() const
     return m_item.get();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 ThemeProvider::ThemeProvider(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
     : KDecoration2::DecorationThemeProvider(parent, data, args)
-#else
-ThemeProvider::ThemeProvider(QObject *parent, const KPluginMetaData &data)
-    : KDecoration2::DecorationThemeProvider(parent)
-#endif
     , m_data(data)
 {
     init();
@@ -725,13 +661,7 @@ void ThemeProvider::findAllQmlThemes()
         data.setPluginId(m_data.pluginId());
         data.setThemeName(offer.pluginId());
         data.setVisibleName(offer.name());
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         data.setHasConfiguration(hasConfiguration(offer.pluginId()));
-#else
-        if (hasConfiguration(offer.pluginId())) {
-            data.setConfigurationName("kcm_auroraedecoration");
-        }
-#endif
         m_themes.append(data);
     }
 }
@@ -768,13 +698,7 @@ void ThemeProvider::findAllSvgThemes()
         data.setPluginId(m_data.pluginId());
         data.setThemeName(QLatin1String("__aurorae__svg__") + packageName);
         data.setVisibleName(name);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         data.setHasConfiguration(hasConfiguration(data.themeName()));
-#else
-        if (hasConfiguration(data.themeName())) {
-            data.setConfigurationName("kcm_auroraedecoration");
-        }
-#endif
         m_themes.append(data);
     }
 }
@@ -791,7 +715,6 @@ bool ThemeProvider::hasConfiguration(const QString &theme)
     return !(ui.isEmpty() || xml.isEmpty());
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
     , m_theme(findTheme(args))
@@ -897,7 +820,6 @@ void ConfigurationModule::initQml()
     QEvent le(QEvent::LanguageChange);
     QCoreApplication::sendEvent(customConfigForm, &le);
 }
-#endif
 }
 
 #include "aurorae.moc"

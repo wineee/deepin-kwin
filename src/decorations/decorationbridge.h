@@ -8,11 +8,19 @@
 */
 #pragma once
 
-#include "kwin_export.h"
+#include <kwinglobals.h>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <KDecoration2/Private/DecorationBridge>
+#else
+#include "private/decorationbridge.h"
+#endif
+
 #include <QObject>
+#include <QSharedPointer>
 
 class KPluginFactory;
+
 namespace KDecoration2
 {
 class DecorationSettings;
@@ -37,7 +45,7 @@ public:
     void init();
     KDecoration2::Decoration *createDecoration(Window *window);
 
-    std::unique_ptr<KDecoration2::DecoratedWindowPrivate> createClient(KDecoration2::DecoratedWindow *client, KDecoration2::Decoration *decoration) override;
+    std::unique_ptr<KDecoration2::DecoratedClientPrivate> createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration) override;
     std::unique_ptr<KDecoration2::DecorationSettingsPrivate> settings(KDecoration2::DecorationSettings *parent) override;
 
     QString recommendedBorderSize() const
@@ -52,7 +60,7 @@ public:
 
     void reconfigure();
 
-    const std::shared_ptr<KDecoration2::DecorationSettings> &settings() const
+    const QSharedPointer<KDecoration2::DecorationSettings> &settings() const
     {
         return m_settings;
     }
@@ -75,7 +83,7 @@ private:
     QString m_plugin;
     QString m_defaultTheme;
     QString m_theme;
-    std::shared_ptr<KDecoration2::DecorationSettings> m_settings;
+    QSharedPointer<KDecoration2::DecorationSettings> m_settings;
     bool m_noPlugin;
 };
 } // Decoration

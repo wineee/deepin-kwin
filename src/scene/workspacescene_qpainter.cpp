@@ -8,7 +8,7 @@
 */
 #include "workspacescene_qpainter.h"
 // KWin
-#include "decorations/decoratedwindow.h"
+#include "decorations/decoratedclient.h"
 #include "scene/itemrenderer_qpainter.h"
 #include "window.h"
 
@@ -41,7 +41,7 @@ std::unique_ptr<Shadow> WorkspaceSceneQPainter::createShadow(Window *window)
     return std::make_unique<SceneQPainterShadow>(window);
 }
 
-DecorationRenderer *WorkspaceSceneQPainter::createDecorationRenderer(Decoration::DecoratedWindowImpl *impl)
+DecorationRenderer *WorkspaceSceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
 {
     return new SceneQPainterDecorationRenderer(impl);
 }
@@ -69,7 +69,7 @@ void SceneQPainterShadow::resetTexture()
 //****************************************
 // QPainterDecorationRenderer
 //****************************************
-SceneQPainterDecorationRenderer::SceneQPainterDecorationRenderer(Decoration::DecoratedWindowImpl *client)
+SceneQPainterDecorationRenderer::SceneQPainterDecorationRenderer(Decoration::DecoratedClientImpl *client)
     : DecorationRenderer(client)
 {
 }

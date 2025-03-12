@@ -13,6 +13,9 @@ set(KF6_MIN_VERSION "6.0.0")
 set(KF6_CURRENT_VERSION "6.0.0")
 set(KDE_COMPILERSETTINGS_LEVEL "5.54")
 
+set(QT_MAJOR_VERSION "6")
+set(KF_MAJOR_VERSION "6")
+
 if(MEMCHECK)
     set(CMAKE_BUILD_TYPE Debug)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O1 -fno-omit-frame-pointer -Wall -Wextra -fsanitize=address")
@@ -162,21 +165,22 @@ set_package_properties(KF6Kirigami2 PROPERTIES
 find_package(KF6KCMUtils ${PROJECT_VERSION} CONFIG)
 find_package(KF6Service ${PROJECT_VERSION} CONFIG)
 
-find_package(Breeze 6.0.0 CONFIG)
-set_package_properties(Breeze PROPERTIES
-    TYPE OPTIONAL
-    PURPOSE "For setting the default window decoration plugin"
-)
-if (${Breeze_FOUND})
-    if (${BREEZE_WITH_KDECORATION})
-        set(HAVE_BREEZE_DECO true)
-    else()
-        set(HAVE_BREEZE_DECO FALSE)
-    endif()
-else()
-    set(HAVE_BREEZE_DECO FALSE)
-endif()
-add_feature_info("Breeze-Decoration" HAVE_BREEZE_DECO "Default decoration plugin Breeze")
+
+# find_package(Breeze 6.0.0 CONFIG)
+# set_package_properties(Breeze PROPERTIES
+#     TYPE OPTIONAL
+#     PURPOSE "For setting the default window decoration plugin"
+# )
+# if (${Breeze_FOUND})
+#     if (${BREEZE_WITH_KDECORATION})
+#         set(HAVE_BREEZE_DECO true)
+#     else()
+#         set(HAVE_BREEZE_DECO FALSE)
+#     endif()
+# else()
+#     set(HAVE_BREEZE_DECO FALSE)
+# endif()
+# add_feature_info("Breeze-Decoration" HAVE_BREEZE_DECO "Default decoration plugin Breeze")
 
 find_package(EGL)
 set_package_properties(EGL PROPERTIES

@@ -43,11 +43,7 @@ protected Q_SLOTS:
     void onCompositorChanged(bool);
 
 protected:
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     void paint(QPainter *painter, const QRect &repaintRegion) override;
-#else
-    void paint(QPainter *painter, const QRectF &repaintRegion) override;
-#endif
     KDecoration2::DecorationButtonType m_type;
 
     QTimer *max_hover_timer = nullptr;

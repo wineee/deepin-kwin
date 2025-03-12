@@ -100,7 +100,7 @@ class TabBoxClientImpl;
 
 namespace Decoration
 {
-class DecoratedWindowImpl;
+class DecoratedClientImpl;
 class DecorationPalette;
 }
 
@@ -1327,8 +1327,8 @@ public:
     {
         return m_decoration.decoration != nullptr;
     }
-    QPointer<Decoration::DecoratedWindowImpl> decoratedWindow() const;
-    void setDecoratedWindow(QPointer<Decoration::DecoratedWindowImpl> client);
+    QPointer<Decoration::DecoratedClientImpl> decoratedClient() const;
+    void setDecoratedClient(QPointer<Decoration::DecoratedClientImpl> client);
     bool decorationHasAlpha() const;
     void triggerDecorationRepaint();
     virtual void layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const;
@@ -2151,7 +2151,7 @@ private:
     struct
     {
         std::shared_ptr<KDecoration2::Decoration> decoration;
-        QPointer<Decoration::DecoratedWindowImpl> client;
+        QPointer<Decoration::DecoratedClientImpl> client;
         QElapsedTimer doubleClickTimer;
         QRegion inputRegion;
     } m_decoration;

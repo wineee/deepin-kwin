@@ -11,7 +11,7 @@
 
 #include <config-kwin.h>
 
-#include "decorations/decoratedwindow.h"
+#include "decorations/decoratedclient.h"
 #include "input_event_spy.h"
 #include "mousebuttons.h"
 #include "pointer_input.h"
@@ -153,7 +153,7 @@ void TouchInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
     });
 }
 
-void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedWindowImpl *old, Decoration::DecoratedWindowImpl *now)
+void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now)
 {
     // nothing to do
 }

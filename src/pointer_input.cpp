@@ -14,7 +14,7 @@
 
 #include "core/output.h"
 #include "cursorsource.h"
-#include "decorations/decoratedwindow.h"
+#include "decorations/decoratedclient.h"
 #include "effects.h"
 #include "input_event.h"
 #include "input_event_spy.h"
@@ -518,7 +518,7 @@ bool PointerInputRedirection::focusUpdatesBlocked()
     return false;
 }
 
-void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedWindowImpl *old, Decoration::DecoratedWindowImpl *now)
+void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now)
 {
     disconnect(m_decorationGeometryConnection);
     m_decorationGeometryConnection = QMetaObject::Connection();

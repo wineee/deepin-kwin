@@ -372,11 +372,7 @@ QRegion BlurEffect::decorationBlurRegion(const EffectWindow *w) const
     if (!decorationSupportsBlurBehind(w)) {
         return QRegion();
     }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QRegion decorationRegion = QRegion(w->decoration()->rect()) - w->decorationInnerRect().toRect();
-#else
-    QRegion decorationRegion = QRegion(w->decoration()->rect().toRect()) - w->decorationInnerRect().toRect();
-#endif
     //! we return only blurred regions that belong to decoration region
     return decorationRegion.intersected(w->decoration()->blurRegion());
 }

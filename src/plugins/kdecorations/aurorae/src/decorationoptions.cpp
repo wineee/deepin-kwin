@@ -5,7 +5,7 @@
 */
 #include "decorationoptions.h"
 #include <KConfigGroup>
-#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/DecoratedClient>
 #include <KDecoration2/DecorationSettings>
 #include <KSharedConfig>
 #include <QGuiApplication>
@@ -155,35 +155,23 @@ void DecorationOptions::setDecoration(KDecoration2::Decoration *decoration)
     }
     if (m_decoration) {
         // disconnect from existing decoration
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        disconnect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedWindow::activeChanged, this, &DecorationOptions::slotActiveChanged);
-#else
-        disconnect(m_decoration->window(), &KDecoration2::DecoratedWindow::activeChanged, this, &DecorationOptions::slotActiveChanged);
-#endif
+        disconnect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
         auto s = m_decoration->settings();
-        disconnect(s.get(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
-        disconnect(s.get(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
-        disconnect(s.get(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
+        disconnect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
+        disconnect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
+        disconnect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
         disconnect(m_paletteConnection);
     }
     m_decoration = decoration;
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedWindow::activeChanged, this, &DecorationOptions::slotActiveChanged);
-    m_paletteConnection = connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedWindow::paletteChanged, this, [this](const QPalette &pal) {
+    connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
+    m_paletteConnection = connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::paletteChanged, this, [this](const QPalette &pal) {
         m_colors.update(pal);
         Q_EMIT colorsChanged();
     });
-#else
-    connect(m_decoration->window(), &KDecoration2::DecoratedWindow::activeChanged, this, &DecorationOptions::slotActiveChanged);
-    m_paletteConnection = connect(m_decoration->window(), &KDecoration2::DecoratedWindow::paletteChanged, this, [this](const QPalette &pal) {
-        m_colors.update(pal);
-        Q_EMIT colorsChanged();
-    });
-#endif
     auto s = m_decoration->settings();
-    connect(s.get(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
-    connect(s.get(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
-    connect(s.get(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
+    connect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
+    connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
+    connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
     Q_EMIT decorationChanged();
 }
 
@@ -192,17 +180,10 @@ void DecorationOptions::slotActiveChanged()
     if (!m_decoration) {
         return;
     }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (m_active == m_decoration->client().toStrongRef().data()->isActive()) {
         return;
     }
     m_active = m_decoration->client().toStrongRef().data()->isActive();
-#else
-    if (m_active == m_decoration->window()->isActive()) {
-        return;
-    }
-    m_active = m_decoration->window()->isActive();
-#endif
     Q_EMIT colorsChanged();
     Q_EMIT fontChanged();
 }

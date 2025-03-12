@@ -33,7 +33,7 @@ class PreviewBridge : public DecorationBridge
 public:
     explicit PreviewBridge(QObject *parent = nullptr);
     ~PreviewBridge() override;
-    std::unique_ptr<DecoratedWindowPrivate> createClient(DecoratedWindow *client, Decoration *decoration) override;
+    std::unique_ptr<DecoratedClientPrivate> createClient(DecoratedClient *client, Decoration *decoration) override;
     std::unique_ptr<DecorationSettingsPrivate> settings(DecorationSettings *parent) override;
 
     PreviewClient *lastCreatedClient()

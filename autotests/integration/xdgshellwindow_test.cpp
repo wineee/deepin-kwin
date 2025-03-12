@@ -23,7 +23,7 @@
 #include "window.h"
 #include "workspace.h"
 
-#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 

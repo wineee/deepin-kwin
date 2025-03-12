@@ -21,7 +21,7 @@
 #include "chameleonbutton.h"
 #include "chameleon.h"
 #include "kwinutils.h"
-#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 #include <QDebug>
 #include <QHoverEvent>
@@ -32,6 +32,7 @@
 #else
 #include <private/qtx11extras_p.h>
 #endif
+
 #include "workspace.h"
 
 #define LONG_PRESS_TIME     300
@@ -40,11 +41,7 @@
 ChameleonButton::ChameleonButton(KDecoration2::DecorationButtonType type, const QPointer<KDecoration2::Decoration> &decoration, QObject *parent)
     : KDecoration2::DecorationButton(type, decoration, parent)
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    auto c = decoration->client().data();
-#else
-    auto c = decoration->window();
-#endif
+    auto c = decoration->client().toStrongRef().data();
     // qDebug()<<__FUNCTION__<<__LINE__<<"windowId: "<<c->windowId();
 
     m_type = type;
@@ -54,15 +51,15 @@ ChameleonButton::ChameleonButton(KDecoration2::DecorationButtonType type, const 
         break;
     case KDecoration2::DecorationButtonType::Minimize:
         setVisible(c->isMinimizeable());
-        connect(c, &KDecoration2::DecoratedWindow::minimizeableChanged, this, &ChameleonButton::setVisible);
+        connect(c, &KDecoration2::DecoratedClient::minimizeableChanged, this, &ChameleonButton::setVisible);
         break;
     case KDecoration2::DecorationButtonType::Maximize:
         setVisible(c->isMaximizeable());
-        connect(c, &KDecoration2::DecoratedWindow::maximizeableChanged, this, &ChameleonButton::setVisible);
+        connect(c, &KDecoration2::DecoratedClient::maximizeableChanged, this, &ChameleonButton::setVisible);
         break;
     case KDecoration2::DecorationButtonType::Close:
         setVisible(c->isCloseable());
-        connect(c, &KDecoration2::DecoratedWindow::closeableChanged, this, &ChameleonButton::setVisible);
+        connect(c, &KDecoration2::DecoratedClient::closeableChanged, this, &ChameleonButton::setVisible);
         break;
     default: // 隐藏不支持的按钮
         setVisible(false);
@@ -84,11 +81,7 @@ KDecoration2::DecorationButton *ChameleonButton::create(KDecoration2::Decoration
     return new ChameleonButton(type, decoration, parent);
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void ChameleonButton::paint(QPainter *painter, const QRect &repaintRegion)
-#else
-void ChameleonButton::paint(QPainter *painter, const QRectF &repaintRegion)
-#endif
 {
     Q_UNUSED(repaintRegion)
 
@@ -108,11 +101,7 @@ void ChameleonButton::paint(QPainter *painter, const QRectF &repaintRegion)
 
     painter->save();
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    auto c = decoration->client().data();
-#else
-    auto c = decoration->window();
-#endif
+    auto c = decoration->client().toStrongRef().data();
 
     QIcon::Mode state = QIcon::Normal;
 
@@ -172,15 +161,9 @@ void ChameleonButton::hoverEnterEvent(QHoverEvent *event)
                 }
                 if (m_type == KDecoration2::DecorationButtonType::Maximize) {
                     if (KWinUtils::instance()->isCompositing()) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-                        auto c = decoration->client().data();
-#else
-                        auto c = decoration->window();
-#endif
+                        auto c = decoration->client().toStrongRef().data();
                         if (c) {
-                            // FIXME
-                            uint32_t wid = 0;
-                            // uint32_t wid = effect->isWaylandClient() ? c->decorationId() : c->windowId();
+                            uint32_t wid = effect->isWaylandClient() ? c->decorationId() : c->windowId();
                             QRect button_rect(QPoint(geometry().x() + effect->pos().x(), effect->pos().y()),
                                               QSize(geometry().width(), decoration->titleBarHeight()));
                             KWinUtils::showSplitMenu(button_rect, wid);
@@ -230,15 +213,9 @@ void ChameleonButton::mousePressEvent(QMouseEvent *event)
                     if (decoration) {
                         effect = decoration->effect();
                         if (effect) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-                            auto c = decoration->client().data();
-#else
-                            auto c = decoration->window();
-#endif
+                            auto c = decoration->client().toStrongRef().data();
                             if (c) {
-                                // FIXME
-                                uint32_t wid = 0;
-                                // uint32_t wid = effect->isWaylandClient() ? c->decorationId() : c->windowId();
+                                uint32_t wid = effect->isWaylandClient() ? c->decorationId() : c->windowId();
                                 KWinUtils::setSplitMenuKeepShowing(true);
                                 QRect button_rect(QPoint(geometry().x() + effect->pos().x(), effect->pos().y()),
                                                   QSize(geometry().width(), decoration->titleBarHeight()));
@@ -265,11 +242,11 @@ void ChameleonButton::mouseReleaseEvent(QMouseEvent *event)
         }
         if (!geometry().contains(event->localPos()))
             KWinUtils::setSplitMenuKeepShowing(false);
-        if (!m_isMaxAvailble) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        if (!m_isMaxAvailble) {
             event->setLocalPos(QPointF(event->localPos().x() - OUT_RELEASE_EVENT, event->localPos().y()));
-#endif
         }
+#endif
         KWinUtils::hideSplitMenu(false);
         KWinUtils::setSplitMenuKeepShowing(false);
     }
@@ -277,19 +254,22 @@ void ChameleonButton::mouseReleaseEvent(QMouseEvent *event)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     KDecoration2::DecorationButton::mouseReleaseEvent(event);
 #else
-    QMouseEvent newEvent(
-        event->type(),
-        QPointF(event->position().x() - OUT_RELEASE_EVENT, event->position().y()), // 新的局部位置
-        event->scenePosition(),
-        event->globalPosition(),
-        event->button(),
-        event->buttons(),
-        event->modifiers());
-    KDecoration2::DecorationButton::mouseReleaseEvent(&newEvent);
+    if (!m_isMaxAvailble) {
+        QMouseEvent newEvent(
+            event->type(),
+            QPointF(event->position().x() - OUT_RELEASE_EVENT, event->position().y()), // 新的局部位置
+            event->scenePosition(),
+            event->globalPosition(),
+            event->button(),
+            event->buttons(),
+            event->modifiers());
+        KDecoration2::DecorationButton::mouseReleaseEvent(&newEvent);
+    } else {
+        KDecoration2::DecorationButton::mouseReleaseEvent(event);
+    }
 #endif
     m_isMaxAvailble = true;
 }
-
 void ChameleonButton::onCompositorChanged(bool active)
 {
     if (!active) {

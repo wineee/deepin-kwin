@@ -7,7 +7,7 @@
 
 #include "../../../decorations/decorationpalette.h"
 
-#include <KDecoration2/Private/DecoratedWindowPrivate>
+#include <KDecoration2/Private/DecoratedClientPrivate>
 #include <QObject>
 #include <QPalette>
 
@@ -17,7 +17,7 @@ namespace KDecoration2
 {
 namespace Preview
 {
-class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedWindowPrivate
+class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedClientPrivate
 {
     Q_OBJECT
     Q_PROPERTY(KDecoration2::Decoration *decoration READ decoration CONSTANT)
@@ -48,7 +48,7 @@ class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedWind
     Q_PROPERTY(bool bordersRightEdge READ bordersRightEdge WRITE setBordersRightEdge NOTIFY bordersRightEdgeChanged)
     Q_PROPERTY(bool bordersBottomEdge READ bordersBottomEdge WRITE setBordersBottomEdge NOTIFY bordersBottomEdgeChanged)
 public:
-    explicit PreviewClient(DecoratedWindow *client, Decoration *decoration);
+    explicit PreviewClient(DecoratedClient *client, Decoration *decoration);
     ~PreviewClient() override;
 
     QString caption() const override;

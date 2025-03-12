@@ -17,7 +17,7 @@
 
 #include "composite.h"
 #include "core/output.h"
-#include "decorations/decoratedwindow.h"
+#include "decorations/decoratedclient.h"
 #include "scene/itemrenderer_opengl.h"
 #include "window.h"
 
@@ -74,7 +74,7 @@ std::unique_ptr<Shadow> WorkspaceSceneOpenGL::createShadow(Window *window)
     return std::make_unique<SceneOpenGLShadow>(window);
 }
 
-DecorationRenderer *WorkspaceSceneOpenGL::createDecorationRenderer(Decoration::DecoratedWindowImpl *impl)
+DecorationRenderer *WorkspaceSceneOpenGL::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
 {
     return new SceneOpenGLDecorationRenderer(impl);
 }
@@ -266,7 +266,7 @@ bool SceneOpenGLShadow::prepareBackend()
     return true;
 }
 
-SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::DecoratedWindowImpl *client)
+SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::DecoratedClientImpl *client)
     : DecorationRenderer(client)
     , m_texture()
 {

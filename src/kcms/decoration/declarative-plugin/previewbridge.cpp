@@ -8,7 +8,7 @@
 #include "previewitem.h"
 #include "previewsettings.h"
 
-#include <KDecoration2/DecoratedWindow>
+#include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 
 #include <KCModule>
@@ -45,7 +45,7 @@ PreviewBridge::PreviewBridge(QObject *parent)
 
 PreviewBridge::~PreviewBridge() = default;
 
-std::unique_ptr<DecoratedWindowPrivate> PreviewBridge::createClient(DecoratedWindow *client, Decoration *decoration)
+std::unique_ptr<DecoratedClientPrivate> PreviewBridge::createClient(DecoratedClient *client, Decoration *decoration)
 {
     auto ptr = std::unique_ptr<PreviewClient>(new PreviewClient(client, decoration));
     m_lastCreatedClient = ptr.get();

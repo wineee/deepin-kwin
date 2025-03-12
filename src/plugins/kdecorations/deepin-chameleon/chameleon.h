@@ -32,7 +32,6 @@
 #include <QDir>
 #include <QFont>
 #include <QPainterPath>
-#include <QPointer>
 #include <QScreen>
 #include <QSettings>
 #include <QVariant>
@@ -47,11 +46,8 @@ public:
     explicit Chameleon(QObject *parent = nullptr, const QVariantList &args = QVariantList());
     ~Chameleon();
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     void paint(QPainter *painter, const QRect &repaintArea) override;
-#else
-    void paint(QPainter *painter, const QRectF &repaintArea) override;
-#endif
+
     const ChameleonTheme::ThemeConfig *themeConfig() const;
     KWin::EffectWindow *effect() const;
     bool noTitleBar() const;
@@ -82,11 +78,7 @@ Q_SIGNALS:
     void effectInitialized(KWin::EffectWindow *effect);
 
 public Q_SLOTS:
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     void init() override;
-#else
-    bool init() override;
-#endif
 
 private Q_SLOTS:
     void updateFont(QString updateType, QString val);

@@ -86,17 +86,10 @@ public:
     }
     QImage decorationShadowImage() const;
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QWeakPointer<KDecoration2::DecorationShadow> decorationShadow() const
     {
         return m_decorationShadow.toWeakRef();
     }
-#else
-    std::weak_ptr<KDecoration2::DecorationShadow> decorationShadow() const
-    {
-        return std::weak_ptr<KDecoration2::DecorationShadow>(m_decorationShadow);
-    }
-#endif
 
     enum ShadowElements {
         ShadowElementTop,
@@ -175,11 +168,7 @@ private:
     // caches
     QSizeF m_cachedSize;
     // Decoration based shadows
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QSharedPointer<KDecoration2::DecorationShadow> m_decorationShadow;
-#else
-    std::shared_ptr<KDecoration2::DecorationShadow> m_decorationShadow;
-#endif
 };
 
 }
