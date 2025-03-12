@@ -32,7 +32,7 @@ namespace KDecoration2
 namespace Preview
 {
 
-static const QString s_pluginName = QStringLiteral("org.kde.KDecoration2");
+static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
 
 PreviewBridge::PreviewBridge(QObject *parent)
     : DecorationBridge(parent)

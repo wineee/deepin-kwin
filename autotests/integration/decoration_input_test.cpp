@@ -486,7 +486,7 @@ void DecorationInputTest::testResizeOutsideWindow()
     // this test verifies that one can resize the window outside the decoration with NoSideBorder
 
     // first adjust config
-    kwinApp()->config()->group("org.kde.KDecoration2").writeEntry("BorderSize", QStringLiteral("None"));
+    kwinApp()->config()->group("org.kde.kdecoration2").writeEntry("BorderSize", QStringLiteral("None"));
     kwinApp()->config()->sync();
     workspace()->slotReconfigure();
 

@@ -19,7 +19,7 @@ namespace KDecoration2
 
 namespace Configuration
 {
-static const QString s_pluginName = QStringLiteral("org.kde.KDecoration2");
+static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
 
 DecorationsModel::DecorationsModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -128,7 +128,7 @@ void DecorationsModel::init()
         std::unique_ptr<KDecoration2::DecorationThemeProvider> themeFinder(
             KPluginFactory::instantiatePlugin<KDecoration2::DecorationThemeProvider>(info).plugin);
         KDecoration2::DecorationThemeMetaData data;
-        const auto decoSettingsMap = info.rawData().value("org.kde.KDecoration2").toObject().toVariantMap();
+        const auto decoSettingsMap = info.rawData().value("org.kde.kdecoration2").toObject().toVariantMap();
         if (themeFinder) {
             const QString &kns = findKNewStuff(decoSettingsMap);
             if (!kns.isEmpty() && !m_knsProviders.contains(kns)) {

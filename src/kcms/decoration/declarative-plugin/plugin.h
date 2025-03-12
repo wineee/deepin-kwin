@@ -14,7 +14,7 @@ namespace Preview
 
 class Plugin : public QQmlExtensionPlugin
 {
-    Q_PLUGIN_METADATA(IID "org.kde.KDecoration2")
+    Q_PLUGIN_METADATA(IID "org.kde.kdecoration2")
     Q_OBJECT
 public:
     void registerTypes(const char *uri) override;
