@@ -11,5 +11,5 @@ target_link_libraries(fakedecoshadows
         Qt${QT_MAJOR_VERSION}::Gui
     PRIVATE
         KDecoration2::KDecoration
-        KF5::CoreAddons)
+        KF6::CoreAddons)
 
